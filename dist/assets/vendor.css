@@ -1,0 +1,53 @@
+.squiggle-canvas {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+}
+.squiggle-canvas img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.squiggle-canvas .squiggle-tools {
+  top: 0;
+  left: 0;
+  position: absolute;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  border-radius: 2px;
+}
+.squiggle-canvas .squiggle-tools .squiggle-colors .squiggle-color {
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+}
+.squiggle-canvas .squiggle-tools .squiggle-colors .squiggle-color.active {
+  width: 46px;
+  height: 46px;
+}
+.squiggle-canvas .squiggle-tools .squiggle-sizes {
+  margin-top: 16px;
+}
+.squiggle-canvas .squiggle-tools .squiggle-sizes .squiggle-size {
+  padding: 10px 0;
+  height: 16px;
+  width: 36px;
+  cursor: pointer;
+}
+.squiggle-canvas .squiggle-tools .squiggle-sizes .squiggle-size .bar {
+  width: 100%;
+  height: 100%;
+}
+.squiggle-canvas .squiggle-tools .squiggle-sizes .squiggle-size.active {
+  width: 46px;
+}
+.squiggle-canvas .squiggle-tools .squiggle-sizes .squiggle-size.small {
+  height: 8px;
+  padding: 11px 0;
+}
+

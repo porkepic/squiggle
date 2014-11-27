@@ -1,0 +1,26 @@
+<img {{bind-attr src="image"}}/>
+<div class="squiggle-paper">
+
+</div>
+
+<div class="squiggle-tools">
+  <div class="squiggle-colors">
+    {{#each color in colors}}
+      <div {{bind-attr class=":squiggle-color color.selected:active" style="color.style"}} {{action "selectColor" color}}>
+      </div>
+    {{/each}}
+  </div>
+  <div class="squiggle-sizes">
+    <div {{bind-attr class=":squiggle-size :small smallSize:active"}} {{action "setSmallSize"}}>
+      <div class="bar" {{bind-attr style="currentColor.style"}}></div>
+    </div>
+    <div {{bind-attr class=":squiggle-size smallSize::active" }} {{action "setLargeSize"}}>
+      <div class="bar" {{bind-attr style="currentColor.style"}}></div>
+    </div>
+  </div>
+  <div class="squiggle-brushes">
+    <div class="squiggle-erase" {{action "changeBrush" "eraser"}}></div>
+    <div class="squiggle-path" {{action "changeBrush" "path"}}></div>
+    <div class="squiggle-text" {{action "changeBrush" "text"}}></div>
+  </div>
+</div>
