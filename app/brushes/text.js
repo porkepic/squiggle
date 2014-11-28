@@ -111,8 +111,10 @@ export default Base.extend({
                  ";width:", this._area.css("width")].join("");
     if(value && value.length > 0){
       // configure the elements to fit in the bounded box
-      fo.setAttribute("x", this._area.css("left").replace("px", ""));
-      fo.setAttribute("y", this._area.css("top").replace("px", ""));
+      var point = this._area.offset();
+      point = this.convertPoint(point.left, point.top);
+      fo.setAttribute("x", point.x);
+      fo.setAttribute("y", point.y);
       fo.setAttribute("width", 8 + (+this._area.css("width").replace("px", "")));
       fo.setAttribute("height", 8 + (+this._area.css("height").replace("px", "")));
 

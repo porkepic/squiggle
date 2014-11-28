@@ -37,14 +37,13 @@ export default Base.extend({
         startx = center.x,
         starty = center.y,
         paper = this.get("paper"),
-        offset = this.get("el").offset(),
         shapes = this.get("shapes"),
-        events = this.get("events");
+        events = this.get("events"),
+        point;
 
-    startx = startx - offset.left + $(window).scrollLeft();
-    starty = starty - offset.top + $(window).scrollTop();
+    point = this.convertPoint(startx, starty);
 
-    this._shape = paper.path("M"+startx+ " " +starty);
+    this._shape = paper.path("M"+ point.x + " " + point.y);
     this._savedPath = this._shape.attr('path');
 
     shapes.push(this._shape);
@@ -55,12 +54,12 @@ export default Base.extend({
   move: function(e){
     var path = this._savedPath,
         added_path = [],
-        offset = this.get("el").offset(),
-        center = e.center;
+        center = e.center,
+        point = this.convertPoint( center.x, center.y);
     e = e.srcEvent;
     added_path.push("L");
-    added_path.push(center.x - offset.left + $(window).scrollLeft());
-    added_path.push(center.y - offset.top + $(window).scrollTop());
+    added_path.push(point.x);
+    added_path.push(point.y);
     path.push(added_path);
     this._shape.attr('path', path);
   },

@@ -1,4 +1,5 @@
 import Ember from "ember";
+import BaseBrush from "../brushes/base";
 import PathBrush from "../brushes/path";
 import TextBrush from "../brushes/text";
 import EraseBrush from "../brushes/eraser";
@@ -58,6 +59,10 @@ export default Ember.Component.extend({
     })
   }.property(),
 
+  navTool: function(){
+    return BaseBrush.create();
+  }.property(),
+
   toolName: "path",
   tool: function(){
     var tool = this.get("toolName");
@@ -68,6 +73,7 @@ export default Ember.Component.extend({
   isPathTool: Ember.computed.equal("toolName", "path"),
   isTextTool: Ember.computed.equal("toolName", "text"),
   isSelectTool: Ember.computed.equal("toolName", "select"),
+  isNavTool: Ember.computed.equal("toolName", "nav"),
 
   color: function(){
     return this.get("colors").findProperty("selected", true);
@@ -94,10 +100,10 @@ export default Ember.Component.extend({
     this.get("tool").enable();
     this.configureTool();
 
-    // this.changeViewBox();
     this._raphael.setViewBox(0,0, this.$().width(),this.$().height());
+    
     Ember.$(window).on("resize", function(){
-      Ember.run.debounce(that, "changeViewBox", 100);
+      Ember.run.debounce(that, "changeSize", 100);
     });
   },
 
@@ -108,8 +114,18 @@ export default Ember.Component.extend({
     tool.set("fontSize", this.get("smallSize") ? 14 : 24);
   }.observes("tool", "color", "smallSize"),
 
-  changeViewBox: function(){
+  changeSize: function(){
     this._raphael.setSize(this.$().width(),this.$().height());
+  },
+
+  exportToPng: function(){
+    var img = this.get("image");
+    if(img){
+      img = this.$("img");
+
+      
+    }
+
   },
 
   actions: {

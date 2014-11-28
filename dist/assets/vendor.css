@@ -152,4 +152,7 @@
 .squiggle-canvas .squiggle-tools .squiggle-brushes .squiggle-select:before {
   content: "S";
 }
+.squiggle-canvas .squiggle-tools .squiggle-brushes .squiggle-nav:before {
+  content: "N";
+}
 
