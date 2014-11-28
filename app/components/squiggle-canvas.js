@@ -1,6 +1,7 @@
 import Ember from "ember";
 import PathBrush from "../brushes/path";
 import TextBrush from "../brushes/text";
+import EraseBrush from "../brushes/eraser";
 import Color from "../brushes/color";
 
 export default Ember.Component.extend({
@@ -28,9 +29,7 @@ export default Ember.Component.extend({
   image: "",
 
   eraserTool: function(){
-    return PathBrush.create({
-      paper: this._raphael,
-      shapes: this._shapes,
+    return EraseBrush.create({
       el: this.$(".squiggle-paper")
     })
   }.property(),
@@ -45,8 +44,12 @@ export default Ember.Component.extend({
 
   textTool: function(){
     return TextBrush.create({
-      paper: this._raphael,
-      shapes: this._shapes,
+      el: this.$(".squiggle-paper")
+    })
+  }.property(),
+
+  selectTool: function(){
+    return SelectBrush.create({
       el: this.$(".squiggle-paper")
     })
   }.property(),
@@ -60,6 +63,7 @@ export default Ember.Component.extend({
   isEraserTool: Ember.computed.equal("toolName", "eraser"),
   isPathTool: Ember.computed.equal("toolName", "path"),
   isTextTool: Ember.computed.equal("toolName", "text"),
+  isSelectTool: Ember.computed.equal("toolName", "select"),
 
   createRaphael: function(){
     this._raphael = Raphael(this.$(".squiggle-paper")[0], this.get("width"), this.get("height"));

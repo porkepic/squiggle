@@ -2,13 +2,8 @@ import Ember from "ember";
 import Base from "./base";
 
 export default Base.extend({
-  paper: null,
-  shapes: null,
   el: null,
-
-  _savedPath: null,
-  _shape: null,
-
+  
   events: function(){
     var events = new Hammer(this.get("el").find("svg")[0]);
     return events;
@@ -17,13 +12,10 @@ export default Base.extend({
   enable: function(){
     var events = this.get("events");
 
-    this._shape = this._savedPath = null;
-
     events.get('pan').set({ direction: Hammer.DIRECTION_ALL });
     events.on("panstart", Ember.$.proxy(this.start, this));
     events.on("panmove", Ember.$.proxy(this.move, this));
     events.on("panend", Ember.$.proxy(this.end, this));
-
     events.on("tap", Ember.$.proxy(this.startTap, this));
   },
 
@@ -32,6 +24,7 @@ export default Base.extend({
     events.off("panstart");
     events.off("panmove");
     events.off("panend");
+    events.off("tap");
   },
 
   startTap: function(e){
@@ -120,8 +113,8 @@ export default Base.extend({
       // configure the elements to fit in the bounded box
       fo.setAttribute("x", this._area.css("left").replace("px", ""));
       fo.setAttribute("y", this._area.css("top").replace("px", ""));
-      fo.setAttribute("width", this._area.css("width").replace("px", ""));
-      fo.setAttribute("height", this._area.css("height").replace("px", ""));
+      fo.setAttribute("width", 8 + (+this._area.css("width").replace("px", "")));
+      fo.setAttribute("height", 8 + (+this._area.css("height").replace("px", "")));
 
       text.innerHTML =  value.replace(/\n/g, "<br/>");
       text.style.color = this.get("brushColor");
@@ -129,6 +122,7 @@ export default Base.extend({
       text.style.fontSize = this.get("fontSize") + "px";
       text.style.overflowWrap = "break-word";
       text.style.width = this._area.css("width");
+      text.style.border = "4px dashed transparent";
 
       // insert everything into the dom
       fo.appendChild(text);

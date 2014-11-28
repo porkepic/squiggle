@@ -32,7 +32,7 @@ export default Base.extend({
     events.off("panend");
   },
 
-  start: function(e, callback){
+  start: function(e){
     var center = e.center,
         startx = center.x,
         starty = center.y,

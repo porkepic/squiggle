@@ -32,6 +32,25 @@
   border: 4px dashed black;
   display: block;
 }
+.squiggle-canvas svg .highlight {
+  opacity: 0.4;
+  stroke-width: 20px;
+  stroke-linecap: round;
+}
+.squiggle-canvas svg .text-highlight {
+  border: 4px dashed rgba(0, 0, 0, 0.4) !important;
+  cursor: pointer;
+}
+.squiggle-canvas svg .highlight-select {
+  opacity: 0.4;
+  stroke: red;
+  stroke-width: 20px;
+  stroke-linecap: round;
+}
+.squiggle-canvas svg .text-highlight-select {
+  border: 4px dashed rgba(255, 0, 0, 0.4) !important;
+  cursor: pointer;
+}
 .squiggle-canvas .squiggle-tools {
   top: 0;
   left: 0;
@@ -123,5 +142,8 @@
 }
 .squiggle-canvas .squiggle-tools .squiggle-brushes .squiggle-text:before {
   content: "T";
+}
+.squiggle-canvas .squiggle-tools .squiggle-brushes .squiggle-select:before {
+  content: "S";
 }
 

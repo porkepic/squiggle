@@ -33,6 +33,28 @@
     }
   }
 
+  svg{
+    .highlight{
+      opacity: 0.4;
+      stroke-width: 20px;
+      stroke-linecap: round;
+    }
+    .text-highlight{
+      border: 4px dashed rgba(0,0,0,0.4) !important;
+      cursor: pointer;
+    }
+    .highlight-select{
+      opacity: 0.4;
+      stroke: red;
+      stroke-width: 20px;
+      stroke-linecap: round;
+    }
+    .text-highlight-select{
+      border: 4px dashed rgba(255,0,0,0.4) !important;
+      cursor: pointer;
+    }
+  }
+
   .squiggle-tools{
     top: 0;
     left: 0;
@@ -131,6 +153,9 @@
       }
       .squiggle-text:before{
         content: "T";
+      }
+      .squiggle-select:before{
+        content: "S";
       }
     }
   }
