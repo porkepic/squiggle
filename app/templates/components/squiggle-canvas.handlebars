@@ -5,23 +5,29 @@
 </div>
 
 <div class="squiggle-tools">
-  <div class="squiggle-colors">
-    {{#each color in colors}}
-      <div {{bind-attr class=":squiggle-color color.selected:active" style="color.style"}} {{action "selectColor" color}}>
+  {{#if showColors}}
+    <div class="squiggle-colors">
+      {{#each color in colors}}
+        <div {{bind-attr class=":squiggle-color color.selected:active" style="color.style"}} {{action "selectColor" color}}>
+        </div>
+      {{/each}}
+    </div>
+  {{/if}}
+  {{#if showSizes}}
+    <div {{bind-attr class="isTextTool:squiggle-text-size :squiggle-sizes" style="textStyle"}}>
+      <div {{bind-attr class=":squiggle-size :small smallSize:active"}} {{action "setSmallSize"}}>
+        <div class="bar" {{bind-attr style="color.style"}}></div>
       </div>
-    {{/each}}
-  </div>
-  <div {{bind-attr class="isTextTool:squiggle-text-size :squiggle-sizes" style="textStyle"}}>
-    <div {{bind-attr class=":squiggle-size :small smallSize:active"}} {{action "setSmallSize"}}>
-      <div class="bar" {{bind-attr style="color.style"}}></div>
+      <div {{bind-attr class=":squiggle-size smallSize::active" }} {{action "setLargeSize"}}>
+        <div class="bar" {{bind-attr style="color.style"}}></div>
+      </div>
     </div>
-    <div {{bind-attr class=":squiggle-size smallSize::active" }} {{action "setLargeSize"}}>
-      <div class="bar" {{bind-attr style="color.style"}}></div>
+  {{/if}}
+  {{#if showTools}}
+    <div class="squiggle-brushes">
+      <div {{bind-attr class=":squiggle-brush :squiggle-eraser isEraserTool:active"}} {{action "selectTool" "eraser"}}></div>
+      <div {{bind-attr class=":squiggle-brush :squiggle-path isPathTool:active"}} {{action "selectTool" "path"}}></div>
+      <div {{bind-attr class=":squiggle-brush :squiggle-text isTextTool:active"}} {{action "selectTool" "text"}}></div>
     </div>
-  </div>
-  <div class="squiggle-brushes">
-    <div {{bind-attr class=":squiggle-brush :squiggle-eraser isEraserTool:active"}} {{action "selectTool" "eraser"}}></div>
-    <div {{bind-attr class=":squiggle-brush :squiggle-path isPathTool:active"}} {{action "selectTool" "path"}}></div>
-    <div {{bind-attr class=":squiggle-brush :squiggle-text isTextTool:active"}} {{action "selectTool" "text"}}></div>
-  </div>
+  {{/if}}
 </div>

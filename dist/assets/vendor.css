@@ -8,11 +8,7 @@
   position: relative;
 }
 .squiggle-canvas img {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
 }
 .squiggle-canvas textarea {
   position: absolute;
@@ -31,6 +27,11 @@
 .squiggle-canvas textarea.active {
   border: 4px dashed black;
   display: block;
+}
+.squiggle-canvas .squiggle-paper {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 .squiggle-canvas svg .highlight {
   opacity: 0.4;

@@ -8,12 +8,20 @@ export default Ember.Component.extend({
   layoutName: "components/squiggle-canvas",
   classNameBindings: [":squiggle-canvas"],
   attributeBindings: ["style"],
-  width: 1024,
-  height: 512,
+
+  // either provide width + height or an image
+  width: "100%",
+  height: "auto",
+  image: null,
+
+  smallSize: false,
+  showColors: true,
+  showSizes: true,
+  showTools: true,
 
   style: function(){
-    return ["width:" + this.get("width") + "px",
-     "height:" + this.get("height") + "px"].join(";")
+    return ["width:" + this.get("width"),
+     "height:" + this.get("height")].join(";")
   }.property("width", "height"),
 
   colors: [
@@ -23,10 +31,6 @@ export default Ember.Component.extend({
     Color.create({color:"#2ECC40"}),
     Color.create({color:"#000", selected:true})
   ],
-
-  smallSize: false,
-
-  image: "",
 
   eraserTool: function(){
     return EraseBrush.create({
@@ -65,18 +69,37 @@ export default Ember.Component.extend({
   isTextTool: Ember.computed.equal("toolName", "text"),
   isSelectTool: Ember.computed.equal("toolName", "select"),
 
+  color: function(){
+    return this.get("colors").findProperty("selected", true);
+  }.property("colors.@each.selected"),
+
+  textStyle: function(){
+    return ["color:", this.get("color.color"),
+    ";font-size:", this.get("smallSize") ? "14px": "24px", ";"].join("");
+  }.property("color", "smallSize"),
+
+  didInsertElement: function(){
+    if(this.get("image")){
+      this.$("img").on("load", Ember.$.proxy(this.createRaphael, this));
+    } else {
+      this.createRaphael();
+    }
+  },
+
   createRaphael: function(){
-    this._raphael = Raphael(this.$(".squiggle-paper")[0], this.get("width"), this.get("height"));
+    var that = this;
+    this._raphael = Raphael(this.$(".squiggle-paper")[0], this.$().width(),this.$().height());
     this._shapes = [];
 
     this.get("tool").enable();
     this.configureTool();
 
-  }.on("didInsertElement"),
-
-  color: function(){
-    return this.get("colors").findProperty("selected", true);
-  }.property("colors.@each.selected"),
+    // this.changeViewBox();
+    this._raphael.setViewBox(0,0, this.$().width(),this.$().height());
+    Ember.$(window).on("resize", function(){
+      Ember.run.debounce(that, "changeViewBox", 100);
+    });
+  },
 
   configureTool: function(){
     var tool = this.get("tool");
@@ -85,10 +108,9 @@ export default Ember.Component.extend({
     tool.set("fontSize", this.get("smallSize") ? 14 : 24);
   }.observes("tool", "color", "smallSize"),
 
-  textStyle: function(){
-    return ["color:", this.get("color.color"),
-    ";font-size:", this.get("smallSize") ? "14px": "24px", ";"].join("");
-  }.property("color", "smallSize"),
+  changeViewBox: function(){
+    this._raphael.setSize(this.$().width(),this.$().height());
+  },
 
   actions: {
     selectTool: function(tool){
