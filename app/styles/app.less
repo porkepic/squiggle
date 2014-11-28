@@ -13,13 +13,31 @@
     width: 100%;
     height: 100%;
   }
+
+  textarea{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    background: transparent;
+    border: none;
+    -webkit-appearance: none;
+    display: none;
+    &:focus {
+      outline:none;
+    }
+    &.active{
+      border: 4px dashed black;
+      display: block;
+    }
+  }
+
   .squiggle-tools{
     top: 0;
     left: 0;
     position: absolute;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.12);
-    border-radius: 2px;
-
+    
     .squiggle-colors{
       .squiggle-color{
         width: 36px;
@@ -35,7 +53,6 @@
     .squiggle-sizes{
       margin-top: 16px;
 
-      // background: rgba(0,0,0,0.4);
       .squiggle-size{
         padding: 10px 0;
         height: 16px;
@@ -52,6 +69,68 @@
           height: 8px;
           padding: 11px 0;
         }
+      }
+      &.squiggle-text-size{
+        text-align: center;
+        font-family: serif;
+        font-weight: bold;
+
+        .squiggle-size{
+          height: 36px;
+          padding: 0;
+          background: rgba(0,0,0,0.4);
+          font-size: 24px;
+          &.active{
+            height: 46px;
+          }
+          &.small{
+            font-size: 14px;
+          }
+          &:before{
+            position: relative;
+            top: 8px;
+            content: "A";
+          }
+        }
+        .bar{
+          display: none;
+        }
+      }
+    }
+
+    .squiggle-brushes{
+      margin-top: 16px;
+
+      .squiggle-brush{
+        height: 36px;
+        width: 36px;
+        cursor: pointer;
+        text-align: center;
+        font-weight: bold;
+        font-family: sans-serif;
+        color: white;
+        background: #111;
+        &:before{
+          position: relative;
+          top: 8px;
+        }
+        &.active{
+          width: 46px;
+          height: 46px;
+          &:before{
+            top: 14px;
+          }
+        }
+      }
+
+      .squiggle-eraser:before{
+        content: "E";
+      }
+      .squiggle-path:before{
+        content: "P";
+      }
+      .squiggle-text:before{
+        content: "T";
       }
     }
   }

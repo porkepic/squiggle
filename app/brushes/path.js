@@ -41,8 +41,8 @@ export default Base.extend({
         shapes = this.get("shapes"),
         events = this.get("events");
 
-    startx = startx - offset.left;
-    starty = starty - offset.top;
+    startx = startx - offset.left + $(window).scrollLeft();
+    starty = starty - offset.top + $(window).scrollTop();
 
     this._shape = paper.path("M"+startx+ " " +starty);
     this._savedPath = this._shape.attr('path');
@@ -59,8 +59,8 @@ export default Base.extend({
         center = e.center;
     e = e.srcEvent;
     added_path.push("L");
-    added_path.push(center.x - offset.left);
-    added_path.push(center.y - offset.top);
+    added_path.push(center.x - offset.left + $(window).scrollLeft());
+    added_path.push(center.y - offset.top + $(window).scrollTop());
     path.push(added_path);
     this._shape.attr('path', path);
   },
