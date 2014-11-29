@@ -3,6 +3,7 @@ import Base from "./base";
 
 export default Base.extend({
   el: null,
+  paper: null,
   
   events: function(){
     var events = new Hammer(this.get("el").find("svg")[0]);
@@ -100,35 +101,69 @@ export default Base.extend({
     return box;
   },
 
+  resizeTextNode: function(text, width) {
+    var characters = text.textContent.split("").reverse(),
+        character,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1.1, // ems
+        y = text.getAttribute("y"),
+        x = text.getAttribute("x"),
+        dy = 0,
+        tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+
+        // prepare the first tspan
+        tspan.setAttribute("x", x);
+        tspan.setAttribute("y", y);
+        tspan.setAttribute("dy", dy + "em");
+        
+        // remove current text
+        text.textContent = null;
+        text.appendChild(tspan);
+
+    
+        
+    while (character = characters.pop()) {
+      line.push(character);
+      tspan.textContent = line.join("");
+      if (tspan.getComputedTextLength() > width) {
+        line.pop();
+        tspan.textContent = line.join("");
+        line = [character];
+
+        tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+        tspan.setAttribute("x", x);
+        tspan.setAttribute("y", y);
+        tspan.setAttribute("dy", (++lineNumber * lineHeight + dy) + "em");
+        tspan.textContent = character;
+        text.appendChild(tspan);
+      }
+    }
+  },
+
   convertToSVG: function(){
     var value = this._area.val(),
-        paper = this.get("el").find("svg")[0],
-        text = document.createElementNS("http://www.w3.org/1999/xhtml", "div"),
-        fo = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject'),
-        style = ["color:", this.get("brushColor"),
-                 ";font-family: sans-serif;overflow-wrap: break-word;",
-                 ";font-size:", this.get("fontSize"), "px",
-                 ";width:", this._area.css("width")].join("");
+        svg = this.get("el").find("svg")[0],
+        text;
     if(value && value.length > 0){
       // configure the elements to fit in the bounded box
-      var point = this._area.offset();
-      point = this.convertPoint(point.left, point.top);
-      fo.setAttribute("x", point.x);
-      fo.setAttribute("y", point.y);
-      fo.setAttribute("width", 8 + (+this._area.css("width").replace("px", "")));
-      fo.setAttribute("height", 8 + (+this._area.css("height").replace("px", "")));
+      var point = this._area.offset(),
+          w = Ember.$(window);
+      point = this.convertPoint(point.left - w.scrollLeft(), point.top - w.scrollTop() + 20);
 
-      text.innerHTML =  value.replace(/\n/g, "<br/>");
-      text.style.color = this.get("brushColor");
-      text.style.fontFamily = "sans-serif";
-      text.style.fontSize = this.get("fontSize") + "px";
-      text.style.overflowWrap = "break-word";
-      text.style.width = this._area.css("width");
-      text.style.border = "4px dashed transparent";
+      text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
-      // insert everything into the dom
-      fo.appendChild(text);
-      paper.appendChild(fo);
+      text.setAttribute("y", point.y);
+      text.setAttribute("x", point.x);
+      text.textContent = value;
+      text.setAttribute("fill", this.get("brushColor"));
+      text.setAttribute("font-family", "sans-serif");
+      text.setAttribute("font-size", this.get("fontSize") + "px");
+      svg.appendChild(text);
+
+      // find out width
+      point = this.convertPoint(this.get("el").offset().left + this._area.width(), 0);
+      this.resizeTextNode(text, point.x);
     }
 
     // remove the value for next use.

@@ -49,6 +49,7 @@ export default Ember.Component.extend({
 
   textTool: function(){
     return TextBrush.create({
+      paper: this._raphael,
       el: this.$(".squiggle-paper")
     })
   }.property(),
@@ -118,14 +119,35 @@ export default Ember.Component.extend({
     this._raphael.setSize(this.$().width(),this.$().height());
   },
 
+  // To upload follow http://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
   exportToPng: function(){
-    var img = this.get("image");
+    var img = this.get("image"),
+        canvas = this.$("canvas")[0],
+        context = canvas.getContext("2d"),
+        svg = this.$("svg").clone(),
+        svgImg = new Image(), url;
+
     if(img){
-      img = this.$("img");
+      img = this.$("img")[0];
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
 
-      
+      svg.attr("width", canvas.width);
+      svg.attr("height", canvas.height);
+
+      context.drawImage(img, 0, 0);
+
+    }else{
+      canvas.width = this.$().width();
+      canvas.height = this.$().height();
     }
+    url = "data:image/svg+xml," + svg[0].outerHTML;
 
+    svgImg.onload = function () {
+      context.drawImage(svgImg, 0, 0);
+      window.location = canvas.toDataURL();
+    }
+    svgImg.src = url;
   },
 
   actions: {
@@ -143,6 +165,7 @@ export default Ember.Component.extend({
     },
     setLargeSize: function(){
       this.set("smallSize", false);
+      this.exportToPng();
     }
   }
 });
