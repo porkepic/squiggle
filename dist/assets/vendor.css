@@ -44,19 +44,16 @@
   stroke-width: 20px;
   stroke-linecap: round;
 }
-.squiggle-canvas svg .text-highlight {
-  border: 4px dashed rgba(0, 0, 0, 0.4) !important;
-  cursor: pointer;
+.squiggle-canvas svg tspan.highlight,
+.squiggle-canvas svg tspan.highlight-select {
+  fill: none;
+  stroke-width: 4px;
 }
 .squiggle-canvas svg .highlight-select {
   opacity: 0.4;
   stroke: red;
   stroke-width: 20px;
   stroke-linecap: round;
-}
-.squiggle-canvas svg .text-highlight-select {
-  border: 4px dashed rgba(255, 0, 0, 0.4) !important;
-  cursor: pointer;
 }
 .squiggle-canvas .squiggle-tools {
   top: 0;

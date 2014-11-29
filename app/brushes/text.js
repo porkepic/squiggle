@@ -157,6 +157,8 @@ export default Base.extend({
       text.setAttribute("x", point.x);
       text.textContent = value;
       text.setAttribute("fill", this.get("brushColor"));
+      text.setAttribute("stroke", this.get("brushColor"));
+      text.setAttribute("stroke-width", "0px");
       text.setAttribute("font-family", "sans-serif");
       text.setAttribute("font-size", this.get("fontSize") + "px");
       svg.appendChild(text);
