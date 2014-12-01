@@ -16,7 +16,7 @@ module.exports = {
 
     app.import('bower_components/raphael/raphael.js');
     app.import('bower_components/hammerjs/hammer.js');
-    app.import('bower_components/jquery-mousewheel/jquery-mousewheel.js');
+    app.import('bower_components/jquery-mousewheel/jquery.mousewheel.js');
 
   }
 };
