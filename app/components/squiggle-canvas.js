@@ -4,6 +4,7 @@ import PathBrush from "../brushes/path";
 import TextBrush from "../brushes/text";
 import EraseBrush from "../brushes/eraser";
 import ZoomBrush from "../brushes/zoom";
+import NavBrush from "../brushes/nav";
 import Color from "../brushes/color";
 
 export default Ember.Component.extend({
@@ -69,7 +70,10 @@ export default Ember.Component.extend({
   }.property(),
 
   navTool: function(){
-    return BaseBrush.create();
+    return NavBrush.create({
+      paper: this._raphael,
+      el: this.$(".squiggle-paper")
+    });
   }.property(),
 
   toolName: "path",

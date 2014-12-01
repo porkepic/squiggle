@@ -11,13 +11,6 @@ export default Base.extend({
     return events;
   }.property("el"),
 
-  currentViewBox: function(){
-    var svg = this.get("el").find("svg");
-    return svg[0].getAttribute("viewBox").split(" ").map(function(v){
-      return +v;
-    });
-  },
-
   enable: function(){
     var svg = this.get("el").find("svg");
 
@@ -34,7 +27,8 @@ export default Base.extend({
   },
 
   disable: function(){
-    this.get("events").off("pinch");
+    this.get("events").off("pinchstart");
+    this.get("events").off("pinchmove");
     this.get("el").find("svg").off("mousewheel");
   },
 

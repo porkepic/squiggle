@@ -14,5 +14,12 @@ export default Ember.Object.extend({
     pt.x = x;
     pt.y = y;
     return pt;
+  },
+
+  currentViewBox: function(){
+    var svg = this.get("el").find("svg");
+    return svg[0].getAttribute("viewBox").split(" ").map(function(v){
+      return +v;
+    });
   }
 });
