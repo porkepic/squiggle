@@ -3,6 +3,7 @@ import BaseBrush from "../brushes/base";
 import PathBrush from "../brushes/path";
 import TextBrush from "../brushes/text";
 import EraseBrush from "../brushes/eraser";
+import ZoomBrush from "../brushes/zoom";
 import Color from "../brushes/color";
 
 export default Ember.Component.extend({
@@ -32,6 +33,13 @@ export default Ember.Component.extend({
     Color.create({color:"#2ECC40"}),
     Color.create({color:"#000", selected:true})
   ],
+
+  zoom: function(){
+    return ZoomBrush.create({
+      paper: this._raphael,
+      el: this.$(".squiggle-paper")
+    });
+  }.property(),
 
   eraserTool: function(){
     return EraseBrush.create({
@@ -94,18 +102,24 @@ export default Ember.Component.extend({
   },
 
   createRaphael: function(){
-    var that = this;
-    this._raphael = Raphael(this.$(".squiggle-paper")[0], this.$().width(),this.$().height());
+    var that = this,
+        width = this.$().width(),
+        height = this.$().height();
+    this._raphael = Raphael(this.$(".squiggle-paper")[0], width, height);
     this._shapes = [];
 
     this.get("tool").enable();
     this.configureTool();
 
-    this._raphael.setViewBox(0,0, this.$().width(),this.$().height());
+    this._raphael.setViewBox(0,0, width, height);
+
+    this._raphael.image(this.get("image"), 0,0, width, height);
     
     Ember.$(window).on("resize", function(){
       Ember.run.debounce(that, "changeSize", 100);
     });
+
+    this.get("zoom").enable();
   },
 
   configureTool: function(){

@@ -13,8 +13,9 @@
   left: 0;
   visibility: hidden;
 }
-.squiggle-canvas img {
+.squiggle-canvas > img {
   width: 100%;
+  visibility: hidden;
 }
 .squiggle-canvas textarea {
   position: absolute;
