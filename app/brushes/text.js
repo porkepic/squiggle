@@ -29,6 +29,8 @@ export default Base.extend({
   },
 
   startTap: function(e){
+
+
     this.start(e);
     this._area.css( this.checkEdges({
       top: +this._area.css("top").replace("px", ""),
@@ -74,8 +76,8 @@ export default Base.extend({
     box = {
       top: this._initialCenter.y - offset.top + $(window).scrollTop(),
       left: this._initialCenter.x - offset.left + $(window).scrollLeft(),
-      width: center.x - this._initialCenter.x,
-      height: center.y - this._initialCenter.y
+      width: Math.max(200, center.x - this._initialCenter.x),
+      height: Math.max(50, center.y - this._initialCenter.y)
     };
 
     this._area.css( this.checkEdges(box) );
