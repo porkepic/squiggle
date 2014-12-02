@@ -43,28 +43,29 @@ export default Base.extend({
 
   pinchStart: function(e){
     this._pinchStartBox = this.currentViewBox();
+    this._pinchZoom = this._zoom;
     this.pinchMove(e);
   },
 
   pinchZoom: function(e){
     // put the scale back into acceptable range.
-    var pt = this.convertPoint(e.center.x, e.center.y),
-        scale = ((e.scale - 1) * 0.1) + 1;
-
-    this.zoom(pt, scale, this._pinchStartBox);
+    var pt = this.convertPoint(e.center.x, e.center.y);
+    this.zoom(pt, null, e.scale * this._pinchZoom, this._pinchStartBox);
   },
 
-  zoom: function(location, factor, box) {
+  zoom: function(location, factor, zoom, box) {
     if(!box){
       box = this.currentViewBox();
     }
     //transform real coordinates into viewbox coordinates
     var x =  box[0] + (location.x / this._zoom),
         y =  box[1] + (location.y / this._zoom),
-        paper = this.get("paper"),
-        zoom;
+        paper = this.get("paper");
 
-      zoom = (this._zoom * factor);
+      if(!zoom){
+        zoom = (this._zoom * factor);  
+      }
+      
       if(zoom < 1){
         zoom = 1;
       }
