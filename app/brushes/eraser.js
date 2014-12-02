@@ -3,7 +3,8 @@ import Select from "./select";
 
 export default Select.extend({
   select: function(e){
-    if(this._selection == e.target){
+
+    if(this._selection == e.target && e.target.tagName != "image"){
       // check for i18n
       var message = "Do you want to delete this note?";
       if(Ember.I18n){
@@ -13,6 +14,8 @@ export default Select.extend({
         Ember.$(e.target).remove();
         this.get("el").find(".highlight,.highlight-select,.text-highlight,.text-highlight-select").remove();
       }
+
+      this._selection = null;
     }else{
       this._super(e);  
     }

@@ -4,12 +4,19 @@ import Base from "./base";
 export default Base.extend({
   el: null,
 
+  events: function(){
+    var events = new Hammer(this.get("el").find("svg")[0]);
+    return events;
+  }.property("el"),
+
   enable: function(){
     var el = this.get("el"),
         selection = el.find("text:not(.highlight), path:not(.highlight)");
-    selection.on("mouseenter", Ember.$.proxy(this.highlight, this));
-    selection.on("mouseleave", Ember.$.proxy(this.clearHighlights, this));
-    selection.on("click", Ember.$.proxy(this.select, this));
+    if(!( "ontouchstart" in window)){
+      selection.on("mouseenter", Ember.$.proxy(this.highlight, this));
+      selection.on("mouseleave", Ember.$.proxy(this.clearHighlights, this));
+    }
+    this.get("events").on("tap", Ember.$.proxy(this.select, this));
   },
 
   disable: function(){
@@ -18,7 +25,7 @@ export default Base.extend({
 
     selection.off("mouseenter");
     selection.off("mouseleave");
-    selection.off("click");
+    this.get("events").off("tap");
   },
 
   highlight: function(e){

@@ -29,8 +29,6 @@ export default Base.extend({
   },
 
   startTap: function(e){
-
-
     this.start(e);
     this._area.css( this.checkEdges({
       top: +this._area.css("top").replace("px", ""),
