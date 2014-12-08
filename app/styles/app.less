@@ -6,6 +6,9 @@
   -ms-user-select: none;
   user-select: none;
   position: relative;
+  * {
+    box-sizing: border-box;
+  }
   canvas{
     position: absolute;
     top: 0;
@@ -39,6 +42,23 @@
     top: 0;
     left: 0;
   }
+
+  &.squiggle-canvas-eraser{
+    cursor: crosshair;
+  }
+  &.squiggle-canvas-path{
+    cursor: crosshair;
+  }
+  &.squiggle-canvas-text{
+    cursor: text;
+  }
+  &.squiggle-canvas-select{
+    cursor: crosshair;
+  }
+  &.squiggle-canvas-nav{
+    cursor: move;
+  }
+
   svg{
     .highlight{
       opacity: 0.4;
@@ -80,12 +100,11 @@
 
       .squiggle-size{
         padding: 10px 0;
-        height: 16px;
         width: 36px;
         cursor: pointer;
         .bar{
           width: 100%;
-          height: 100%;
+          height: 16px;
         }
         &.active{
           width: 46px;
@@ -94,8 +113,10 @@
         &.small{
           height: 9px;
           padding: 14px 0;
-          &.active{
+          .bar{
             height: 8px;
+          }
+          &.active{
             padding: 19px 0;
           }
         }
@@ -110,11 +131,13 @@
           padding: 0;
           background: rgba(0,0,0,0.4);
           font-size: 24px;
+          line-height: 18px;
           &.active{
             height: 46px;
           }
           &.small{
             font-size: 14px;
+            padding: 8px 0;
           }
           &:before{
             position: relative;

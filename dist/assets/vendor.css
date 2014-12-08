@@ -7,6 +7,9 @@
   user-select: none;
   position: relative;
 }
+.squiggle-canvas * {
+  box-sizing: border-box;
+}
 .squiggle-canvas canvas {
   position: absolute;
   top: 0;
@@ -39,6 +42,21 @@
   position: absolute;
   top: 0;
   left: 0;
+}
+.squiggle-canvas.squiggle-canvas-eraser {
+  cursor: crosshair;
+}
+.squiggle-canvas.squiggle-canvas-path {
+  cursor: crosshair;
+}
+.squiggle-canvas.squiggle-canvas-text {
+  cursor: text;
+}
+.squiggle-canvas.squiggle-canvas-select {
+  cursor: crosshair;
+}
+.squiggle-canvas.squiggle-canvas-nav {
+  cursor: move;
 }
 .squiggle-canvas svg .highlight {
   opacity: 0.4;
@@ -75,13 +93,12 @@
 }
 .squiggle-canvas .squiggle-tools .squiggle-sizes .squiggle-size {
   padding: 10px 0;
-  height: 16px;
   width: 36px;
   cursor: pointer;
 }
 .squiggle-canvas .squiggle-tools .squiggle-sizes .squiggle-size .bar {
   width: 100%;
-  height: 100%;
+  height: 16px;
 }
 .squiggle-canvas .squiggle-tools .squiggle-sizes .squiggle-size.active {
   width: 46px;
@@ -91,8 +108,10 @@
   height: 9px;
   padding: 14px 0;
 }
-.squiggle-canvas .squiggle-tools .squiggle-sizes .squiggle-size.small.active {
+.squiggle-canvas .squiggle-tools .squiggle-sizes .squiggle-size.small .bar {
   height: 8px;
+}
+.squiggle-canvas .squiggle-tools .squiggle-sizes .squiggle-size.small.active {
   padding: 19px 0;
 }
 .squiggle-canvas .squiggle-tools .squiggle-sizes.squiggle-text-size {
@@ -105,12 +124,14 @@
   padding: 0;
   background: rgba(0, 0, 0, 0.4);
   font-size: 24px;
+  line-height: 18px;
 }
 .squiggle-canvas .squiggle-tools .squiggle-sizes.squiggle-text-size .squiggle-size.active {
   height: 46px;
 }
 .squiggle-canvas .squiggle-tools .squiggle-sizes.squiggle-text-size .squiggle-size.small {
   font-size: 14px;
+  padding: 8px 0;
 }
 .squiggle-canvas .squiggle-tools .squiggle-sizes.squiggle-text-size .squiggle-size:before {
   position: relative;

@@ -9,7 +9,7 @@ import Color from "../brushes/color";
 
 export default Ember.Component.extend({
   layoutName: "components/squiggle-canvas",
-  classNameBindings: [":squiggle-canvas"],
+  classNameBindings: [":squiggle-canvas", "toolClass"],
   attributeBindings: ["style"],
 
   // either provide width + height or an image
@@ -21,6 +21,10 @@ export default Ember.Component.extend({
   showColors: true,
   showSizes: true,
   showTools: true,
+
+  toolClass: function(){
+    return "squiggle-canvas-" + this.get("toolName");
+  }.property("toolName"),
 
   style: function(){
     return ["width:" + this.get("width"),

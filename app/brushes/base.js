@@ -1,4 +1,5 @@
 import Ember from "ember";
+import frame from "./animation_frame";
 
 export default Ember.Object.extend({
   enable: Ember.K,

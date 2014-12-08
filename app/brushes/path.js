@@ -32,6 +32,24 @@ export default Base.extend({
     events.off("panend");
   },
 
+  _animationFrame: function(){
+    var path = this._savedPath,
+        added_path = [],
+        pathPoint = this._pathPoint;
+    this._pathPoint = null;
+    if(pathPoint){
+      pathPoint = this.convertPoint( pathPoint.x, pathPoint.y);
+      added_path.push("L");
+      added_path.push(pathPoint.x);
+      added_path.push(pathPoint.y);
+      path.push(added_path);
+      this._shape.attr('path', path);
+    }
+    if(this._animate){
+      window.requestAnimationFrame(Ember.$.proxy(this._animationFrame, this));
+    }
+  },
+
   start: function(e){
     var center = e.center,
         startx = center.x,
@@ -49,22 +67,17 @@ export default Base.extend({
     shapes.push(this._shape);
     this._shape.attr('stroke-width',  this.get("brushWidth"));
     this._shape.attr('stroke', this.get("brushColor"));
+
+    this._animate = true;
+    window.requestAnimationFrame(Ember.$.proxy(this._animationFrame, this));
   },
 
   move: function(e){
-    var path = this._savedPath,
-        added_path = [],
-        center = e.center,
-        point = this.convertPoint( center.x, center.y);
-    e = e.srcEvent;
-    added_path.push("L");
-    added_path.push(point.x);
-    added_path.push(point.y);
-    path.push(added_path);
-    this._shape.attr('path', path);
+    this._pathPoint = e.center;
   },
 
   end: function(e){
+    this._animate = false;
     this._shape = this._savedPath = null;
   }
 }); 

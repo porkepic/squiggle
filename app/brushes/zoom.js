@@ -32,12 +32,20 @@ export default Base.extend({
     this.get("el").find("svg").off("mousewheel");
   },
 
+  _lastZoom: null,
+  _animationFrame: function(){
+    var zoom = this._lastZoom;
+    this._lastZoom = null;
+    if(zoom) this.zoom.apply(this, zoom);
+  },
+
   scrollZoom: function(e){
     var delta = e.originalEvent.deltaY,
         pt = this.convertPoint(e.clientX, e.clientY),
         factor = delta < 0 ? 0.95 : 1.05;
 
-    this.zoom(pt, factor);
+    this._lastZoom = [pt, factor];
+    window.requestAnimationFrame(Ember.$.proxy(this._animationFrame, this));
     e.preventDefault();
   },
 
@@ -50,7 +58,9 @@ export default Base.extend({
   pinchZoom: function(e){
     // put the scale back into acceptable range.
     var pt = this.convertPoint(e.center.x, e.center.y);
-    this.zoom(pt, null, e.scale * this._pinchZoom, this._pinchStartBox);
+
+    this._lastZoom = [pt, null, e.scale * this._pinchZoom, this._pinchStartBox];
+    window.requestAnimationFrame(Ember.$.proxy(this._animationFrame, this));
   },
 
   zoom: function(location, factor, zoom, box) {
