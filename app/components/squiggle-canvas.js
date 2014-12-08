@@ -102,11 +102,13 @@ export default Ember.Component.extend({
   }.property("color", "smallSize"),
 
   didInsertElement: function(){
+    var exporter = this.get("exporter");
     if(this.get("image")){
       this.$("img").on("load", Ember.$.proxy(this.createRaphael, this));
     } else {
       this.createRaphael();
     }
+    if(exporter) exporter.set("squiggle", this);
   },
 
   createRaphael: function(){
@@ -147,29 +149,40 @@ export default Ember.Component.extend({
         canvas = this.$("canvas")[0],
         context = canvas.getContext("2d"),
         svg = this.$("svg").clone(),
-        svgImg = new Image(), url;
+        svgImg = new Image(),
+        url, promise,
+        that = this;
 
-    if(img){
-      img = this.$("img")[0];
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
+    promise = new Ember.RSVP.Promise(function(resolve, reject){
+      try {
+        if(img){
+          img = that.$("img")[0];
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
 
-      svg.attr("width", canvas.width);
-      svg.attr("height", canvas.height);
+          svg.attr("width", canvas.width);
+          svg.attr("height", canvas.height);
 
-      context.drawImage(img, 0, 0);
+          context.drawImage(img, 0, 0);
 
-    }else{
-      canvas.width = this.$().width();
-      canvas.height = this.$().height();
-    }
-    url = "data:image/svg+xml," + svg[0].outerHTML;
+        }else{
+          canvas.width = that.$().width();
+          canvas.height = that.$().height();
+        }
+        url = "data:image/svg+xml," + svg[0].outerHTML;
 
-    svgImg.onload = function () {
-      context.drawImage(svgImg, 0, 0);
-      window.location = canvas.toDataURL();
-    }
-    svgImg.src = url;
+        svgImg.onload = function () {
+          context.drawImage(svgImg, 0, 0);
+          resolve(canvas.toDataURL());
+        }
+        svgImg.onError = reject;
+        svgImg.src = url;
+      } catch(e){
+        reject(e);
+      }
+    });
+
+    return promise;
   },
 
   actions: {
@@ -187,7 +200,6 @@ export default Ember.Component.extend({
     },
     setLargeSize: function(){
       this.set("smallSize", false);
-      this.exportToPng();
     }
   }
 });

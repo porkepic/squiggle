@@ -1,3 +1,4 @@
 <h2 id='title'>Welcome to Ember.js</h2>
+<button {{action "exportToPng"}}>Export</button>
 
-{{squiggle-canvas image="public/graph.png"}}
+{{squiggle-canvas image="public/graph.png" exporter=exporter}}
