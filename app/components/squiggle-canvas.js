@@ -61,6 +61,7 @@ export default Ember.Component.extend({
   }.property(),
 
   pathTool: function(){
+    console.log("reload pathTool")
     return PathBrush.create({
       paper: this._raphael,
       shapes: this._shapes,
@@ -92,7 +93,7 @@ export default Ember.Component.extend({
   tool: function(){
     var tool = this.get("toolName");
     return this.get(tool + "Tool");
-  }.property("toolName"),
+  }.property("toolName", "pathTool", "eraserTool", "textTool", "navTool", "selectTool"),
 
   isEraserTool: Ember.computed.equal("toolName", "eraser"),
   isPathTool: Ember.computed.equal("toolName", "path"),
@@ -123,8 +124,15 @@ export default Ember.Component.extend({
     var that = this,
         width = this.$().width(),
         height = this.$().height();
+    this.$(".squiggle-paper svg").remove();
     this._raphael = Raphael(this.$(".squiggle-paper")[0], width, height);
     this._shapes = [];
+
+    this.notifyPropertyChange("eraserTool");
+    this.notifyPropertyChange("pathTool");
+    this.notifyPropertyChange("textTool");
+    this.notifyPropertyChange("selectTool");
+    this.notifyPropertyChange("navTool");
 
     this.get("tool").enable();
     this.configureTool();

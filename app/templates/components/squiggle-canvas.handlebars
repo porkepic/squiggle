@@ -1,4 +1,4 @@
-<img {{bind-attr src="image"}}/>
+<img {{bind-attr src="image"}} crossOrigin=""/>
 <canvas></canvas>
 <div class="squiggle-paper">
 
@@ -14,7 +14,7 @@
       </div>
 
       <!-- show selected size -->
-      <div {{bind-attr class="isTextTool:squiggle-text-size :squiggle-sizes" style="textStyle"}}>
+      <div class="squiggle-sizes">
         <div {{bind-attr class=":squiggle-size smallSize:small"}} {{action "selectSize"}}>
           <div class="bar" {{bind-attr style="color.style"}}></div>
         </div>
