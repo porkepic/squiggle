@@ -6,9 +6,9 @@ var mergeTrees = require('broccoli-merge-trees')
 
 var app = new EmberAddon();
 
-var tree = pickFiles("tests/dummy/public", {
-  srcDir: '/',
-  destDir: 'public'
-});
+// var tree = pickFiles("tests/dummy/public", {
+//   srcDir: '/',
+//   destDir: 'public'
+// });
 
-module.exports = mergeTrees([app.toTree(), tree]);
+module.exports = app.toTree();

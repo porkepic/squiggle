@@ -18,12 +18,20 @@ export default Ember.Component.extend({
   image: null,
 
   smallSize: false,
-  showColors: true,
-  showSizes: true,
+
+  isFirstPalette: true,
+  showColors: false,
+  showSizes: false,
+  showBrushes: false,
+
   showTools: true,
 
   toolClass: function(){
     return "squiggle-canvas-" + this.get("toolName");
+  }.property("toolName"),
+
+  selectedToolClass: function(){
+    return "squiggle-" + this.get("toolName");
   }.property("toolName"),
 
   style: function(){
@@ -124,7 +132,7 @@ export default Ember.Component.extend({
     this._raphael.setViewBox(0,0, width, height);
 
     this._raphael.image(this.get("image"), 0,0, width, height);
-    
+
     Ember.$(window).on("resize", function(){
       Ember.run.debounce(that, "changeSize", 100);
     });
@@ -185,21 +193,36 @@ export default Ember.Component.extend({
     return promise;
   },
 
+  togglePalette: function(type, callback){
+    if( this.get("isFirstPalette") ){
+      this.set("isFirstPalette", false);
+      this.set(type, true);
+    } else {
+      this.set("isFirstPalette", true);
+      this.set(type, false);
+
+      callback.apply(this);
+    }
+  },
+
   actions: {
     selectTool: function(tool){
-      this.get("tool").disable();
-      this.set("toolName", tool);
-      this.get("tool").enable();
+      this.togglePalette("showBrushes", function(){
+        this.get("tool").disable();
+        this.set("toolName", tool);
+        this.get("tool").enable();
+      });
     },
     selectColor: function(color){
-      this.set("color.selected", false);
-      color.set("selected", true);
+      this.togglePalette("showColors", function(){
+        this.set("color.selected", false);
+        color.set("selected", true);
+      });
     },
-    setSmallSize: function(){
-      this.set("smallSize", true);
-    },
-    setLargeSize: function(){
-      this.set("smallSize", false);
+    selectSize: function(size){
+      this.togglePalette("showSizes", function(){
+        this.set("smallSize", size == "small");
+      });
     }
   }
 });
