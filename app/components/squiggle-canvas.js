@@ -1,13 +1,18 @@
 import Ember from "ember";
-import BaseBrush from "../brushes/base";
-import PathBrush from "../brushes/path";
-import TextBrush from "../brushes/text";
-import EraseBrush from "../brushes/eraser";
-import ZoomBrush from "../brushes/zoom";
-import NavBrush from "../brushes/nav";
-import Color from "../brushes/color";
+import BaseBrush from "squiggle/brushes/base";
+import PathBrush from "squiggle/brushes/path";
+import TextBrush from "squiggle/brushes/text";
+import EraseBrush from "squiggle/brushes/eraser";
+import ZoomBrush from "squiggle/brushes/zoom";
+import NavBrush from "squiggle/brushes/nav";
+import MarkerBrush from "squiggle/brushes/marker";
+import MarkerSingleBrush from "squiggle/brushes/marker-single";
+import Color from "squiggle/brushes/color";
 
-export default Ember.Component.extend({
+import PngExport from "squiggle/mixins/export-to-png";
+import SvgExport from "squiggle/mixins/export-to-svg";
+
+export default Ember.Component.extend(PngExport, SvgExport, {
   layoutName: "components/squiggle-canvas",
   classNameBindings: [":squiggle-canvas", "toolClass"],
   attributeBindings: ["style"],
@@ -61,7 +66,6 @@ export default Ember.Component.extend({
   }.property(),
 
   pathTool: function(){
-    console.log("reload pathTool")
     return PathBrush.create({
       paper: this._raphael,
       shapes: this._shapes,
@@ -89,6 +93,20 @@ export default Ember.Component.extend({
     });
   }.property(),
 
+  markerTool: function(){
+    return MarkerBrush.create({
+      paper: this._raphael,
+      el: this.$(".squiggle-paper")
+    });
+  }.property(),
+
+  markerSingleTool: function(){
+    return MarkerSingleBrush.create({
+      paper: this._raphael,
+      el: this.$(".squiggle-paper")
+    });
+  }.property(),
+
   toolName: "path",
   tool: function(){
     var tool = this.get("toolName");
@@ -100,6 +118,7 @@ export default Ember.Component.extend({
   isTextTool: Ember.computed.equal("toolName", "text"),
   isSelectTool: Ember.computed.equal("toolName", "select"),
   isNavTool: Ember.computed.equal("toolName", "nav"),
+  isMarkerTool: Ember.computed.equal("toolName", "marker"),
 
   color: function(){
     return this.get("colors").findProperty("selected", true);
@@ -120,10 +139,13 @@ export default Ember.Component.extend({
     if(exporter) exporter.set("squiggle", this);
   },
 
+  baseSvg: '<path fill="none" stroke="#000000" d="M451,287L408,299L357,321L319,342L298,357L278,376L241,429L288,504L339,526L478,563L607,565L705,531L736,510L781,449L780,428L753,407L714,392" stroke-width="8" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path>',
+
   createRaphael: function(){
     var that = this,
         width = this.$().width(),
-        height = this.$().height();
+        height = this.$().height(),
+        baseSvg = this.get("baseSvg");
     this.$(".squiggle-paper svg").remove();
     this._raphael = Raphael(this.$(".squiggle-paper")[0], width, height);
     this._shapes = [];
@@ -133,6 +155,7 @@ export default Ember.Component.extend({
     this.notifyPropertyChange("textTool");
     this.notifyPropertyChange("selectTool");
     this.notifyPropertyChange("navTool");
+    this.notifyPropertyChange("markerTool");
 
     this.get("tool").enable();
     this.configureTool();
@@ -141,11 +164,27 @@ export default Ember.Component.extend({
 
     this._raphael.image(this.get("image"), 0,0, width, height);
 
+    if(baseSvg){
+      this.$(".squiggle-paper svg")[0].appendChild(this.parseSvg(baseSvg));
+    }
+
     Ember.$(window).on("resize", function(){
       Ember.run.debounce(that, "changeSize", 100);
     });
 
     this.get("zoom").enable();
+  },
+
+  //
+  // This is needed as a simple append will not respect svg namespace.
+  //
+  parseSvg: function(s) {
+    var div= document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+    div.innerHTML= '<svg xmlns="http://www.w3.org/2000/svg">'+s+'</svg>';
+    var frag= document.createDocumentFragment();
+    while (div.firstChild.firstChild)
+        frag.appendChild(div.firstChild.firstChild);
+    return frag;
   },
 
   configureTool: function(){
@@ -157,48 +196,6 @@ export default Ember.Component.extend({
 
   changeSize: function(){
     this._raphael.setSize(this.$().width(),this.$().height());
-  },
-
-  // To upload follow http://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
-  exportToPng: function(){
-    var img = this.get("image"),
-        canvas = this.$("canvas")[0],
-        context = canvas.getContext("2d"),
-        svg = this.$("svg").clone(),
-        svgImg = new Image(),
-        url, promise,
-        that = this;
-
-    promise = new Ember.RSVP.Promise(function(resolve, reject){
-      try {
-        if(img){
-          img = that.$("img")[0];
-          canvas.width = img.naturalWidth;
-          canvas.height = img.naturalHeight;
-
-          svg.attr("width", canvas.width);
-          svg.attr("height", canvas.height);
-
-          context.drawImage(img, 0, 0);
-
-        }else{
-          canvas.width = that.$().width();
-          canvas.height = that.$().height();
-        }
-        url = "data:image/svg+xml," + svg[0].outerHTML;
-
-        svgImg.onload = function () {
-          context.drawImage(svgImg, 0, 0);
-          resolve(canvas.toDataURL());
-        }
-        svgImg.onError = reject;
-        svgImg.src = url;
-      } catch(e){
-        reject(e);
-      }
-    });
-
-    return promise;
   },
 
   togglePalette: function(type, callback){

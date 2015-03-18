@@ -6,5 +6,12 @@ export default Ember.Object.extend({
     if(canvas){
       return canvas.exportToPng();
     }
+  },
+  exportToSvg: function(){
+    var canvas = this.get("squiggle")
+    if(canvas){
+      return canvas.exportToSvg();
+    }
   }
+
 });
