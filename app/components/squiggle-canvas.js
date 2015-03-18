@@ -139,8 +139,6 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     if(exporter) exporter.set("squiggle", this);
   },
 
-  baseSvg: '<path fill="none" stroke="#000000" d="M451,287L408,299L357,321L319,342L298,357L278,376L241,429L288,504L339,526L478,563L607,565L705,531L736,510L781,449L780,428L753,407L714,392" stroke-width="8" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path>',
-
   createRaphael: function(){
     var that = this,
         width = this.$().width(),
