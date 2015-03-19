@@ -37,6 +37,9 @@ export default Base.extend({
         added_path = [],
         pathPoint = this._pathPoint;
     this._pathPoint = null;
+    if(!path){
+      return;
+    }
     if(pathPoint){
       pathPoint = this.convertPoint( pathPoint.x, pathPoint.y);
       added_path.push("L");
@@ -67,6 +70,7 @@ export default Base.extend({
     shapes.push(this._shape);
     this._shape.attr('stroke-width',  this.get("brushWidth"));
     this._shape.attr('stroke', this.get("brushColor"));
+    this._shape.node.setAttribute('vector-effect', "non-scaling-stroke");
 
     this._animate = true;
     window.requestAnimationFrame(Ember.$.proxy(this._animationFrame, this));
@@ -80,4 +84,4 @@ export default Base.extend({
     this._animate = false;
     this._shape = this._savedPath = null;
   }
-}); 
+});

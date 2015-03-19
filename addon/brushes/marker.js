@@ -33,5 +33,6 @@ export default Base.extend({
 
     circle.attr('stroke-width',  this.get("brushWidth"));
     circle.attr('stroke', this.get("brushColor"));
+    circle.node.setAttribute('vector-effect', "non-scaling-stroke");
   }
 });
