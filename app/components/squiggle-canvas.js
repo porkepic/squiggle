@@ -1,6 +1,7 @@
 import Ember from "ember";
 import BaseBrush from "squiggle/brushes/base";
 import PathBrush from "squiggle/brushes/path";
+import PolygonBrush from "squiggle/brushes/polygon";
 import TextBrush from "squiggle/brushes/text";
 import EraseBrush from "squiggle/brushes/eraser";
 import ZoomBrush from "squiggle/brushes/zoom";
@@ -67,6 +68,14 @@ export default Ember.Component.extend(PngExport, SvgExport, {
 
   pathTool: function(){
     return PathBrush.create({
+      paper: this._raphael,
+      shapes: this._shapes,
+      el: this.$(".squiggle-paper")
+    })
+  }.property(),
+
+  polygonTool: function(){
+    return PolygonBrush.create({
       paper: this._raphael,
       shapes: this._shapes,
       el: this.$(".squiggle-paper")
@@ -163,7 +172,10 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     this._raphael.image(this.get("image"), 0,0, width, height);
 
     if(baseSvg){
-      this.$(".squiggle-paper svg")[0].appendChild(this.parseSvg(baseSvg));
+      var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.setAttribute("transform", "scale("+ width +")");
+      g.appendChild(this.parseSvg(baseSvg));
+      this.$(".squiggle-paper svg")[0].appendChild(g);
     }
 
     Ember.$(window).on("resize", function(){
@@ -194,6 +206,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
 
   changeSize: function(){
     this._raphael.setSize(this.$().width(),this.$().height());
+
   },
 
   togglePalette: function(type, callback){
