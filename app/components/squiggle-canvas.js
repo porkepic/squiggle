@@ -102,6 +102,10 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     });
   }.property(),
 
+  noneTool: function(){
+    return BaseBrush.create();
+  }.property(),
+
   markerTool: function(){
     return MarkerBrush.create({
       paper: this._raphael,
@@ -182,7 +186,9 @@ export default Ember.Component.extend(PngExport, SvgExport, {
       Ember.run.debounce(that, "changeSize", 100);
     });
 
-    this.get("zoom").enable();
+    if(this.get("toolName") != "none"){
+      this.get("zoom").enable();
+    }
   },
 
   //
