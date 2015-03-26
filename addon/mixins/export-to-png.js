@@ -4,10 +4,15 @@ export default Ember.Mixin.create({
     var img = this.get("image"),
         canvas = this.$("canvas")[0],
         context = canvas.getContext("2d"),
-        svg = this.$("svg").clone(),
+        outerSvg = this.$(".squiggle-paper").clone(),
+        svg,
         svgImg = new Image(),
         url, promise,
         that = this;
+
+    outerSvg.find("textarea").remove();
+    outerSvg.find("image").remove();
+    svg = outerSvg.find("svg");
 
     promise = new Ember.RSVP.Promise(function(resolve, reject){
       try {
@@ -25,14 +30,16 @@ export default Ember.Mixin.create({
           canvas.width = that.$().width();
           canvas.height = that.$().height();
         }
-        url = "data:image/svg+xml," + svg[0].outerHTML;
 
-        svgImg.onload = function () {
+        url = "data:image/svg+xml," + outerSvg.html();
+
+        svgImg.onload = function(){
           context.drawImage(svgImg, 0, 0);
           resolve(canvas.toDataURL());
-        }
+        };
         svgImg.onError = reject;
         svgImg.src = url;
+
       } catch(e){
         reject(e);
       }
