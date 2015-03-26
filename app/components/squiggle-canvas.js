@@ -173,7 +173,9 @@ export default Ember.Component.extend(PngExport, SvgExport, {
 
     this._raphael.setViewBox(0,0, width, height);
 
-    this._raphael.image(this.get("image"), 0,0, width, height);
+    if(this.get("image")){
+      this._raphael.image(this.get("image"), 0,0, width, height);
+    }
 
     if(baseSvg){
       var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
