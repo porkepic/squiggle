@@ -6,6 +6,7 @@ export default Base.extend({
 
   events: function(){
     var events = new Hammer(this.get("el").find("svg")[0]);
+    events.get('tap').set( {threshold: 10, posThreshold: 20});
     return events;
   }.property("el"),
 
@@ -61,4 +62,4 @@ export default Base.extend({
     highlight.attr("class", "highlight-select");
     highlight.insertBefore(target);
   }
-}); 
+});
