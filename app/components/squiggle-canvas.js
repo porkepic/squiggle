@@ -155,8 +155,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
   createRaphael: function(){
     var that = this,
         width = this.$().width(),
-        height = this.$().height(),
-        baseSvg = this.get("baseSvg");
+        height = this.$().height();
     this.$(".squiggle-paper svg").remove();
     this._raphael = Raphael(this.$(".squiggle-paper")[0], width, height);
     this._shapes = [];
@@ -177,12 +176,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
       this._raphael.image(this.get("image"), 0,0, width, height);
     }
 
-    if(baseSvg){
-      var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-      g.setAttribute("transform", "scale("+ width +")");
-      g.appendChild(this.parseSvg(baseSvg));
-      this.$(".squiggle-paper svg")[0].appendChild(g);
-    }
+    this.updateBaseSvg();
 
     Ember.$(window).on("resize", function(){
       Ember.run.debounce(that, "changeSize", 100);
@@ -192,6 +186,21 @@ export default Ember.Component.extend(PngExport, SvgExport, {
       this.get("zoom").enable();
     }
   },
+
+  updateBaseSvg: function(){
+    var baseSvg = this.get("baseSvg"),
+        width = this.$().width(),
+        g = document.getElementById("base-svg");
+    if(g) g.remove();
+    if(baseSvg){
+      g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.setAttribute("transform", "scale("+ width +")");
+      g.setAttribute("id", "base-svg");
+
+      g.appendChild(this.parseSvg(baseSvg));
+      this.$(".squiggle-paper svg")[0].appendChild(g);
+    }
+  }.observes("baseSvg"),
 
   //
   // This is needed as a simple append will not respect svg namespace.
@@ -214,7 +223,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
 
   changeSize: function(){
     this._raphael.setSize(this.$().width(),this.$().height());
-
+    this.updateBaseSvg();
   },
 
   togglePalette: function(type, callback){
