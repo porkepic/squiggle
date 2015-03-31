@@ -223,7 +223,6 @@ export default Ember.Component.extend(PngExport, SvgExport, {
 
   changeSize: function(){
     this._raphael.setSize(this.$().width(),this.$().height());
-    this.updateBaseSvg();
   },
 
   togglePalette: function(type, callback){
