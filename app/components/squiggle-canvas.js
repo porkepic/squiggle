@@ -171,6 +171,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     this.configureTool();
 
     this._raphael.setViewBox(0,0, width, height);
+    this._viewBoxWidth = width;
 
     if(this.get("image")){
       this._raphael.image(this.get("image"), 0,0, width, height);
@@ -189,7 +190,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
 
   updateBaseSvg: function(){
     var baseSvg = this.get("baseSvg"),
-        width = this.$().width(),
+        width = this._viewBoxWidth,
         g = document.getElementById("base-svg");
     if(g) g.remove();
     if(baseSvg){
