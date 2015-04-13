@@ -191,8 +191,8 @@ export default Ember.Component.extend(PngExport, SvgExport, {
   updateBaseSvg: function(){
     var baseSvg = this.get("baseSvg"),
         width = this._viewBoxWidth,
-        g = document.getElementById("base-svg");
-    if(g) g.remove();
+        g = this.$().find("#base-svg");
+    g.remove();
     if(baseSvg){
       g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       g.setAttribute("transform", "scale("+ width +")");
