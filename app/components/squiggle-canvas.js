@@ -1,4 +1,5 @@
 import Ember from "ember";
+import Patches from "squiggle/utils/raphael-patch";
 import BaseBrush from "squiggle/brushes/base";
 import PathBrush from "squiggle/brushes/path";
 import PolygonBrush from "squiggle/brushes/polygon";

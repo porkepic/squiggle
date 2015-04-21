@@ -4,7 +4,7 @@ import Base from "./base";
 export default Base.extend({
   el: null,
   paper: null,
-  
+
   events: function(){
     var events = new Hammer(this.get("el").find("svg")[0]);
     events.get('pinch').set({ enable: true });
@@ -73,9 +73,9 @@ export default Base.extend({
         paper = this.get("paper");
 
       if(!zoom){
-        zoom = (this._zoom * factor);  
+        zoom = (this._zoom * factor);
       }
-      
+
       if(zoom < 1){
         zoom = 1;
       }
@@ -84,7 +84,7 @@ export default Base.extend({
       //zoom viewbox dimensions
       box[2] = this._originalViewbox[2] / zoom;
       box[3] = this._originalViewbox[3] / zoom;
-      
+
       //transform coordinates to new box coordinates
       box[0] = x - location.x / zoom;
       box[1] = y - location.y / zoom;
@@ -101,7 +101,6 @@ export default Base.extend({
       if(box[3] + Math.abs(box[1]) > this._originalViewbox[3]){
         box[1] = this._originalViewbox[3] - box[3];
       }
-      
       paper.setViewBox.apply(paper, box, true);
   }
 });
