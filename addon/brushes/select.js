@@ -56,10 +56,13 @@ export default Base.extend({
 
     el.find(".highlight-select").remove();
 
-    this._selection = e.target;
-
-    highlight = target.clone()
-    highlight.attr("class", "highlight-select");
-    highlight.insertBefore(target);
+    if( e.target == el.find("svg")[0] || e.target.tagName == "image"){
+      this._selection = null;
+    } else {
+      this._selection = e.target;
+      highlight = target.clone();
+      highlight.attr("class", "highlight-select");
+      highlight.insertBefore(target);
+    }
   }
 });

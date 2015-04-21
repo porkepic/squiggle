@@ -157,6 +157,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
         width = this.$().width(),
         height = this.$().height();
     this.$(".squiggle-paper svg").remove();
+
     this._raphael = Raphael(this.$(".squiggle-paper")[0], width, height);
     this._shapes = [];
 
