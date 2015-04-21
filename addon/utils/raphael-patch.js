@@ -20,7 +20,7 @@ var $ = function (el, attr) {
     return el;
 };
 window.Raphael._engine.setViewBox = function (x, y, w, h, fit) {
-    eve("raphael.setViewBox", this, this._viewBox, [x, y, w, h, fit]);
+    window.Raphael.eve("raphael.setViewBox", this, this._viewBox, [x, y, w, h, fit]);
     var paperSize = {width:this.canvas.parentNode.offsetWidth},
         size = w / paperSize.width, //mmax(w / paperSize.width, h / paperSize.height),
         top = this.top,
