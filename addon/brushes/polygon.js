@@ -49,7 +49,7 @@ export default Base.extend({
       shapes.push(this._shape);
       this._shape.attr('stroke-width',  this.get("brushWidth"));
       this._shape.attr('stroke', this.get("brushColor"));
-      this._shape.node.setAttribute('vector-effect', "non-scaling-stroke");
+      // this._shape.node.setAttribute('vector-effect', "non-scaling-stroke");
 
     }else{
       var path = this._savedPath,
