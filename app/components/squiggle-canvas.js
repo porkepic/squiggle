@@ -151,9 +151,20 @@ export default Ember.Component.extend(PngExport, SvgExport, {
   didInsertElement: function(){
     if(this.get("image")){
       this.$("img").on("load", Ember.$.proxy(this.createRaphael, this));
+      this.$("img").on("error", Ember.$.proxy(this.errorLoadingImage, this));
     } else {
       this.createRaphael();
     }
+  },
+
+  errorLoadingImage: function(){
+    var message = "There was an error loading the image.";
+    if(Ember.I18n){
+      message = Ember.I18n.t("squiggle.image_error");
+    }
+    alert(message);
+    this.inError = true;
+    this.sendAction( "error");
   },
 
   createRaphael: function(){
