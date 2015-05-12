@@ -33,6 +33,10 @@ export default Ember.Component.extend(PngExport, SvgExport, {
 
   showTools: true,
 
+  _register: function() {
+    this.set('register-as', this); // register-as is a new property
+  }.on('init'),
+
   toolClass: function(){
     return "squiggle-canvas-" + this.get("toolName");
   }.property("toolName"),
@@ -144,13 +148,11 @@ export default Ember.Component.extend(PngExport, SvgExport, {
   }.property("color", "smallSize"),
 
   didInsertElement: function(){
-    var exporter = this.get("exporter");
     if(this.get("image")){
       this.$("img").on("load", Ember.$.proxy(this.createRaphael, this));
     } else {
       this.createRaphael();
     }
-    if(exporter) exporter.set("squiggle", this);
   },
 
   createRaphael: function(){
@@ -215,6 +217,10 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     while (div.firstChild.firstChild)
         frag.appendChild(div.firstChild.firstChild);
     return frag;
+  },
+
+  revertAll: function(){
+    this.createRaphael();
   },
 
   configureTool: function(){
