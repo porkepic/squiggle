@@ -4,7 +4,7 @@ import Base from "./base";
 export default Base.extend({
   el: null,
   paper: null,
-  
+
   events: function(){
     var events = new Hammer(this.get("el").find("svg")[0]);
     events.get('pan').set({ direction: Hammer.DIRECTION_ALL });
@@ -33,13 +33,14 @@ export default Base.extend({
           el = this.get("el"),
           width = el.width(),
           height = el.height(),
+          zoom = width / box[2],
           x, y;
 
       this._lastEvent = null;
 
-      x = -e.deltaX + this._startViewBox[0];
-      y = -e.deltaY + this._startViewBox[1];
-        
+      x = -e.deltaX/zoom + this._startViewBox[0];
+      y = -e.deltaY/zoom + this._startViewBox[1];
+
       x = (x < 0 ? 0 : x);
       y = (y < 0 ? 0 : y);
 
