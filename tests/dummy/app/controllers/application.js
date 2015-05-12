@@ -1,19 +1,16 @@
 import Ember from "ember";
-import exporter from "squiggle/utils/exporter";
 
 export default Ember.ObjectController.extend({
-  exporter: function(){
-    return exporter.create();
-  }.property(),
+  canvas: null,
 
   actions: {
     exportToPng: function(){
-      this.get("exporter").exportToPng().then(function(data){
+      this.get("canvas").exportToPng().then(function(data){
         window.location.href = data;
       });
     },
     exportToSvg: function(){
-      this.get("exporter").exportToSvg().then(function(data){
+      this.get("canvas").exportToSvg().then(function(data){
         console.log(data);
       });
     }

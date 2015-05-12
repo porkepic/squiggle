@@ -3,6 +3,7 @@ import Base from "./base";
 
 export default Base.extend({
   el: null,
+  paper: null,
 
   events: function(){
     var events = new Hammer(this.get("el").find("svg")[0]);
@@ -11,58 +12,106 @@ export default Base.extend({
   }.property("el"),
 
   enable: function(){
-    var el = this.get("el"),
-        selection = el.find("text:not(.highlight), path:not(.highlight)");
-    if(!( "ontouchstart" in window)){
-      selection.on("mouseenter", Ember.$.proxy(this.highlight, this));
-      selection.on("mouseleave", Ember.$.proxy(this.clearHighlights, this));
-    }
-    this.get("events").on("tap", Ember.$.proxy(this.select, this));
+    var events = this.get("events");
+
+    events.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+    events.on("panstart", Ember.$.proxy(this.start, this));
+    events.on("panmove", Ember.$.proxy(this.move, this));
+    events.on("panend", Ember.$.proxy(this.end, this));
   },
 
   disable: function(){
-    var el = this.get("el"),
-        selection = el.find("text:not(.highlight), path:not(.highlight)");
-
-    selection.off("mouseenter");
-    selection.off("mouseleave");
-    this.get("events").off("tap");
+    var events = this.get("events");
+    events.off("panstart");
+    events.off("panmove");
+    events.off("panend");
   },
 
-  highlight: function(e){
-    var target = Ember.$(e.target),
-        el = this.get("el"),
-        highlight;
+  start: function(e){
+    var el = this.get("el"),
+        paper = this.get("paper"),
+        center = e.center,
+        point = this.convertPoint( center.x, center.y),
+        box;
+
+    el.find(".selector").remove();
+
+    box = paper.rect(point.x, point.y, 5, 5);
+    Em.$(box.node).attr("class", "selector");
+
+    this._start = point;
+    this._box = box;
+    this.highlight(box);
+  },
+
+  move: function(e){
+    var el = this.get("el"),
+        paper = this.get("paper"),
+        center = e.center,
+        box = this._box,
+        point = this.convertPoint( center.x, center.y),
+        start = this._start,
+        pos = {x: start.x, y:start.y},
+        width = point.x - pos.x,
+        height = point.y - pos.y;
+
+    if(width < 0){
+      pos.x = start.x + width;
+      width = -width;
+    }
+
+    if(height < 0){
+      pos.y = start.y + height;
+      height = -height;
+    }
+
+    box.attr({
+      x: pos.x,
+      y: pos.y,
+      width: width,
+      height: height
+    });
+
+    this.highlight(box);
+  },
+
+  end: function(e){
+    this.select(this.highlight(this._box));
+  },
+
+  highlight: function(box){
+    var svg = this.get("el").find("svg").get(0),
+        highlight,
+        intersect,
+        selection = [];
+
+    intersect = svg.getIntersectionList(box.node.getBBox(), svg);
 
     this.clearHighlights();
 
-    highlight = target.clone()
-    highlight.attr("class", "highlight");
-    highlight.insertBefore(target);
+    Em.$(intersect).each(function(){
+      if (this.tagName == "image" || this.tagName == "rect"){
+        return;
+      }
+
+      var sel = Em.$(this);
+      selection.push(sel);
+      highlight = sel.clone()
+      highlight.attr("class", "highlight");
+      highlight.insertBefore(this);
+
+    });
+    return selection;
   },
 
-  clearHighlights: function(e){
+  clearHighlights: function(){
     // clear all other highlight
     var el = this.get("el");
     el.find(".highlight").remove();
   },
 
-  select: function(e){
-    var target = Ember.$(e.target),
-        el = this.get("el"),
-        highlight;
-
-    this.clearHighlights();
-
-    el.find(".highlight-select").remove();
-
-    if( e.target == el.find("svg")[0] || e.target.tagName == "image"){
-      this._selection = null;
-    } else {
-      this._selection = e.target;
-      highlight = target.clone();
-      highlight.attr("class", "highlight-select");
-      highlight.insertBefore(target);
-    }
+  select: function(){
+    var el = this.get("el");
+    el.find(".selector").remove();
   }
 });

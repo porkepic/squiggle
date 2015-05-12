@@ -76,6 +76,13 @@
       stroke-width: 20px;
       stroke-linecap: round;
     }
+
+    .selector{
+      stroke: red;
+      fill: rgba(255,0,0,0.1);
+      stroke-dasharray: 5, 3;
+      stroke-width: 2px;
+    }
   }
 
   .squiggle-tools{

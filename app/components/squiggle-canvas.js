@@ -67,6 +67,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
 
   eraserTool: function(){
     return EraseBrush.create({
+      paper: this._raphael,
       el: this.$(".squiggle-paper")
     })
   }.property(),

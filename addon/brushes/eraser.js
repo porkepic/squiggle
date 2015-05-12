@@ -2,22 +2,21 @@ import Ember from "ember";
 import Select from "./select";
 
 export default Select.extend({
-  select: function(e){
+  select: function(intersect){
+    this._super(intersect);
 
-    if(this._selection == e.target && e.target.tagName != "image"){
-      // check for i18n
-      var message = "Do you want to delete this note?";
+    if(intersect.length > 0){
+      var message = "Do you want to delete this selection?";
       if(Ember.I18n){
         message = Ember.I18n.t("squiggle.erase_confirm");
       }
-      if(confirm(message)){
-        Ember.$(e.target).remove();
-        this.get("el").find(".highlight,.highlight-select,.text-highlight,.text-highlight-select").remove();
-      }
 
-      this._selection = null;
-    }else{
-      this._super(e);  
+      if(confirm(message)){
+        Em.$(intersect).each(function(){
+          Em.$(this).remove();
+        });
+      }
     }
+    this.clearHighlights();
   }
 });
