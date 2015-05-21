@@ -2,6 +2,7 @@ import Ember from "ember";
 import frame from "./animation_frame";
 
 export default Ember.Object.extend( {
+  name: "none",
   enable: Ember.K,
   disable: Ember.K,
   convertPoint: function(x, y){

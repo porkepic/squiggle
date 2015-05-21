@@ -2,6 +2,7 @@ import Ember from "ember";
 import Base from "./base";
 
 export default Base.extend({
+  name: "squiggle-nav",
   el: null,
   paper: null,
 

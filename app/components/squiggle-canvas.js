@@ -14,6 +14,17 @@ import Color from "squiggle/brushes/color";
 import PngExport from "squiggle/mixins/export-to-png";
 import SvgExport from "squiggle/mixins/export-to-svg";
 
+var defaultTools = [
+  EraseBrush,
+  NavBrush,
+  PathBrush,
+  PolygonBrush,
+  TextBrush,
+  MarkerBrush,
+  MarkerSingleBrush,
+  BaseBrush
+];
+
 export default Ember.Component.extend(PngExport, SvgExport, {
   layoutName: "components/squiggle-canvas",
   classNameBindings: [":squiggle-canvas", "toolClass"],
@@ -30,20 +41,33 @@ export default Ember.Component.extend(PngExport, SvgExport, {
   showColors: false,
   showSizes: false,
   showBrushes: false,
-
   showTools: true,
+
+  tools: [],
+
+  loadTools: function(){
+    var config = this.container.lookup("squiggle:tools") || defaultTools;
+
+    var tools =  config.map(function(c){
+      return c.create({
+        paper: this._raphael,
+        el: this.$(".squiggle-paper")
+      });
+    }, this);
+    this.set("tools", tools);
+
+    var tool = tools.findBy("name", this.get("toolName"));
+    tool.set("isActive", true);
+  },
+  toolName: "squiggle-path",
+  tool: function(){
+    var tools = this.get("tools");
+    return tools.findBy("isActive", true);
+  }.property("tools.@each.isActive"),
 
   _register: function() {
     this.set('register-as', this); // register-as is a new property
   }.on('init'),
-
-  toolClass: function(){
-    return "squiggle-canvas-" + this.get("toolName");
-  }.property("toolName"),
-
-  selectedToolClass: function(){
-    return "squiggle-" + this.get("toolName");
-  }.property("toolName"),
 
   style: function(){
     return ["width:" + this.get("width"),
@@ -65,80 +89,6 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     });
   }.property(),
 
-  eraserTool: function(){
-    return EraseBrush.create({
-      paper: this._raphael,
-      el: this.$(".squiggle-paper")
-    })
-  }.property(),
-
-  pathTool: function(){
-    return PathBrush.create({
-      paper: this._raphael,
-      shapes: this._shapes,
-      el: this.$(".squiggle-paper")
-    })
-  }.property(),
-
-  polygonTool: function(){
-    return PolygonBrush.create({
-      paper: this._raphael,
-      shapes: this._shapes,
-      el: this.$(".squiggle-paper")
-    })
-  }.property(),
-
-  textTool: function(){
-    return TextBrush.create({
-      paper: this._raphael,
-      el: this.$(".squiggle-paper")
-    })
-  }.property(),
-
-  selectTool: function(){
-    return SelectBrush.create({
-      el: this.$(".squiggle-paper")
-    })
-  }.property(),
-
-  navTool: function(){
-    return NavBrush.create({
-      paper: this._raphael,
-      el: this.$(".squiggle-paper")
-    });
-  }.property(),
-
-  noneTool: function(){
-    return BaseBrush.create();
-  }.property(),
-
-  markerTool: function(){
-    return MarkerBrush.create({
-      paper: this._raphael,
-      el: this.$(".squiggle-paper")
-    });
-  }.property(),
-
-  markerSingleTool: function(){
-    return MarkerSingleBrush.create({
-      paper: this._raphael,
-      el: this.$(".squiggle-paper")
-    });
-  }.property(),
-
-  toolName: "path",
-  tool: function(){
-    var tool = this.get("toolName");
-    return this.get(tool + "Tool");
-  }.property("toolName", "pathTool", "eraserTool", "textTool", "navTool", "selectTool"),
-
-  isEraserTool: Ember.computed.equal("toolName", "eraser"),
-  isPathTool: Ember.computed.equal("toolName", "path"),
-  isTextTool: Ember.computed.equal("toolName", "text"),
-  isSelectTool: Ember.computed.equal("toolName", "select"),
-  isNavTool: Ember.computed.equal("toolName", "nav"),
-  isMarkerTool: Ember.computed.equal("toolName", "marker"),
-
   color: function(){
     return this.get("colors").findProperty("selected", true);
   }.property("colors.@each.selected"),
@@ -149,6 +99,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
   }.property("color", "smallSize"),
 
   didInsertElement: function(){
+
     this.imageDidChange();
   },
 
@@ -181,15 +132,9 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     this._raphael = Raphael(this.$(".squiggle-paper")[0], width, height);
     this._shapes = [];
 
-    this.notifyPropertyChange("eraserTool");
-    this.notifyPropertyChange("pathTool");
-    this.notifyPropertyChange("textTool");
-    this.notifyPropertyChange("selectTool");
-    this.notifyPropertyChange("navTool");
-    this.notifyPropertyChange("markerTool");
+    this.loadTools();
 
     this.get("tool").enable();
-    this.configureTool();
 
     this._raphael.setViewBox(0,0, width, height);
     this._viewBoxWidth = width;
@@ -240,11 +185,24 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     this.createRaphael();
   },
 
-  configureTool: function(){
+  enableTool: function(tool){
+    var tools = this.get("tools");
+
+    tool.enable();
+    this.get("tool").disable();
+    tools.setEach("isActive", false);
+    tool.set("isActive", true);
+  },
+
+  styleDidChange: function(){
     var tool = this.get("tool");
+    if(!tool){
+      return;
+    }
     tool.set("brushColor", this.get("color.color"));
     tool.set("brushWidth", this.get("smallSize") ? 4 : 8);
     tool.set("fontSize", this.get("smallSize") ? 14 : 24);
+
   }.observes("tool", "color", "smallSize"),
 
   changeSize: function(){
@@ -266,9 +224,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
   actions: {
     selectTool: function(tool){
       this.togglePalette("showBrushes", function(){
-        this.get("tool").disable();
-        this.set("toolName", tool);
-        this.get("tool").enable();
+        this.enableTool(tool);
       });
     },
     selectColor: function(color){

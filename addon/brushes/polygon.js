@@ -2,6 +2,7 @@ import Ember from "ember";
 import Base from "./base";
 
 export default Base.extend({
+  name: "squiggle-polygon",
   paper: null,
   shapes: null,
   el: null,

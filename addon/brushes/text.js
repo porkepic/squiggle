@@ -2,9 +2,10 @@ import Ember from "ember";
 import Base from "./base";
 
 export default Base.extend({
+  name: "squiggle-text",
   el: null,
   paper: null,
-  
+
   events: function(){
     var events = new Hammer(this.get("el").find("svg")[0]);
     return events;
@@ -116,13 +117,13 @@ export default Base.extend({
         tspan.setAttribute("x", x);
         tspan.setAttribute("y", y);
         tspan.setAttribute("dy", dy + "em");
-        
+
         // remove current text
         text.textContent = null;
         text.appendChild(tspan);
 
-    
-        
+
+
     while (character = characters.pop()) {
       line.push(character);
       tspan.textContent = line.join("");
@@ -176,4 +177,4 @@ export default Base.extend({
       height: 0
     });
   }
-}); 
+});

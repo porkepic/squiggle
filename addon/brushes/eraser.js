@@ -2,6 +2,7 @@ import Ember from "ember";
 import Select from "./select";
 
 export default Select.extend({
+  name: "squiggle-eraser",
   select: function(intersect){
     this._super(intersect);
 

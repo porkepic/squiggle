@@ -22,7 +22,7 @@
 
       <!-- show selected tool -->
       <div class="squiggle-brushes">
-        <div {{bind-attr class=":squiggle-brush selectedToolClass"}} {{action "selectTool" toolName}}></div>
+        <div {{bind-attr class=":squiggle-brush tool.name"}} {{action "selectTool"}}></div>
       </div>
     {{else}}
       {{#if showColors}}
@@ -45,11 +45,13 @@
       {{/if}}
       {{#if showBrushes}}
         <div class="squiggle-brushes">
-          <div {{bind-attr class=":squiggle-brush :squiggle-eraser isEraserTool:active"}} {{action "selectTool" "eraser"}}></div>
-          <div {{bind-attr class=":squiggle-brush :squiggle-path isPathTool:active"}} {{action "selectTool" "path"}}></div>
-          <div {{bind-attr class=":squiggle-brush :squiggle-marker isMarkerTool:active"}} {{action "selectTool" "marker"}}></div>
-          <div {{bind-attr class=":squiggle-brush :squiggle-text isTextTool:active"}} {{action "selectTool" "text"}}></div>
-          <div {{bind-attr class=":squiggle-brush :squiggle-nav isNavTool:active"}} {{action "selectTool" "nav"}}></div>
+          {{#each tool in tools}}
+            <div {{bind-attr class=":squiggle-brush tool.name tool.isActive:active"}} {{action "selectTool" tool}}>
+              {{#if tool.buttonTemplate}}
+                {{partial tool.buttonTemplate}}
+              {{/if}}
+            </div>
+          {{/each}}
         </div>
       {{/if}}
     {{/if}}

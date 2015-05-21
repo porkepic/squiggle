@@ -2,8 +2,9 @@ import Ember from "ember";
 import Base from "./base";
 
 export default Base.extend({
+  name: "squiggle-path",
   paper: null,
-  shapes: null,
+  shapes: [],
   el: null,
 
   _savedPath: null,
