@@ -149,13 +149,18 @@ export default Ember.Component.extend(PngExport, SvgExport, {
   }.property("color", "smallSize"),
 
   didInsertElement: function(){
+    this.imageDidChange();
+  },
+
+  imageDidChange: function(){
     if(this.get("image")){
-      this.$("img").on("load", Ember.$.proxy(this.createRaphael, this));
-      this.$("img").on("error", Ember.$.proxy(this.errorLoadingImage, this));
+      this.$("img").one("load", Ember.$.proxy(this.createRaphael, this));
+      this.$("img").one("error", Ember.$.proxy(this.errorLoadingImage, this));
     } else {
       this.createRaphael();
     }
-  },
+
+  }.observes("image"),
 
   errorLoadingImage: function(){
     var message = "There was an error loading the image.";
