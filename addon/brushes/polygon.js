@@ -4,7 +4,7 @@ import Base from "./base";
 export default Base.extend({
   name: "squiggle-polygon",
   paper: null,
-  shapes: null,
+  shapes: [],
   el: null,
 
   _savedPath: null,
@@ -25,6 +25,7 @@ export default Base.extend({
   },
 
   disable: function(){
+    var events = this.get("events");
     events.off("tap");
   },
 

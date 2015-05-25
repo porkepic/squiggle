@@ -9,6 +9,7 @@ import ZoomBrush from "squiggle/brushes/zoom";
 import NavBrush from "squiggle/brushes/nav";
 import MarkerBrush from "squiggle/brushes/marker";
 import MarkerSingleBrush from "squiggle/brushes/marker-single";
+import SvgBrush from "squiggle/brushes/svg";
 import Color from "squiggle/brushes/color";
 
 import PngExport from "squiggle/mixins/export-to-png";
@@ -22,6 +23,7 @@ var defaultTools = [
   TextBrush,
   MarkerBrush,
   MarkerSingleBrush,
+  SvgBrush,
   BaseBrush
 ];
 
@@ -45,8 +47,10 @@ export default Ember.Component.extend(PngExport, SvgExport, {
 
   tools: [],
 
+  toolConfig: "squiggle:tools",
+
   loadTools: function(){
-    var config = this.container.lookup("squiggle:tools") || defaultTools;
+    var config = this.container.lookup(this.get("toolConfig")) || defaultTools;
 
     var tools =  config.map(function(c){
       return c.create({
@@ -81,13 +85,6 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     Color.create({color:"#2ECC40"}),
     Color.create({color:"#000", selected:true})
   ],
-
-  zoom: function(){
-    return ZoomBrush.create({
-      paper: this._raphael,
-      el: this.$(".squiggle-paper")
-    });
-  }.property(),
 
   color: function(){
     return this.get("colors").findProperty("selected", true);
@@ -140,7 +137,8 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     this._viewBoxWidth = width;
 
     if(this.get("image")){
-      this._raphael.image(this.get("image"), 0,0, width, height);
+      var image = this._raphael.image(this.get("image"), 0,0, width, height);
+      image.node.setAttribute("class", "base");
     }
 
     this.updateBaseSvg();
@@ -150,7 +148,11 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     });
 
     if(this.get("toolName") != "none"){
-      this.get("zoom").enable();
+      var zoom = ZoomBrush.create({
+        paper: this._raphael,
+        el: this.$(".squiggle-paper")
+      });
+      zoom.enable();
     }
   },
 

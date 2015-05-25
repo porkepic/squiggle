@@ -6,6 +6,7 @@ import EraseBrush from "squiggle/brushes/eraser";
 import NavBrush from "squiggle/brushes/nav";
 import MarkerBrush from "squiggle/brushes/marker";
 import MarkerSingleBrush from "squiggle/brushes/marker-single";
+import SvgBrush from "squiggle/brushes/svg";
 
 var initialize = function(container){
   var config = [
@@ -16,7 +17,7 @@ var initialize = function(container){
     TextBrush,
     MarkerBrush,
     MarkerSingleBrush,
-    BaseBrush
+    SvgBrush
   ];
 
   container.register('squiggle:tools', config, {instantiate: false, singleton: true});

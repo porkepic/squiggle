@@ -90,11 +90,10 @@ export default Base.extend({
     this.clearHighlights();
 
     Em.$(intersect).each(function(){
-      if (this.tagName == "image" || this.tagName == "rect"){
+      var sel = Em.$(this);
+      if (sel.attr("class") == "base" || this.tagName == "rect"){
         return;
       }
-
-      var sel = Em.$(this);
       selection.push(sel);
       highlight = sel.clone()
       highlight.attr("class", "highlight");

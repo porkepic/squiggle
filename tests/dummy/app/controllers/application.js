@@ -9,7 +9,7 @@ export default Ember.ObjectController.extend({
     // test image reloading
     Em.run.later(this, function(){
       this.set("image", "grid.svg");
-    }, 3000);
+    }, 0);
   }.on("init"),
 
   actions: {
