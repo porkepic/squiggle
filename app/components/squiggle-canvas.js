@@ -132,6 +132,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     this.loadTools();
 
     this.get("tool").enable();
+    this.styleDidChange();
 
     this._raphael.setViewBox(0,0, width, height);
     this._viewBoxWidth = width;
