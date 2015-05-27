@@ -41,7 +41,7 @@ export default Base.extend({
 
   scrollZoom: function(e){
     var delta = e.originalEvent.deltaY,
-        pt = this.convertPoint(e.clientX, e.clientY),
+        pt = this.createPoint(e.clientX, e.clientY),
         factor = delta < 0 ? 0.95 : 1.05;
 
     this._lastZoom = [pt, factor];
@@ -57,7 +57,7 @@ export default Base.extend({
 
   pinchZoom: function(e){
     // put the scale back into acceptable range.
-    var pt = this.convertPoint(e.center.x, e.center.y);
+    var pt = this.createPoint(e.center.x, e.center.y);
 
     this._lastZoom = [pt, null, e.scale * this._pinchZoom, this._pinchStartBox];
     window.requestAnimationFrame(Ember.$.proxy(this._animationFrame, this));
@@ -76,8 +76,8 @@ export default Base.extend({
         zoom = (this._zoom * factor);
       }
 
-      if(zoom < 1){
-        zoom = 1;
+      if(zoom < 0.5){
+        zoom = 0.5;
       }
       this._zoom = zoom;
 
@@ -89,18 +89,18 @@ export default Base.extend({
       box[0] = x - location.x / zoom;
       box[1] = y - location.y / zoom;
 
-      box[0] = (box[0] < 0 ? 0 : box[0]);
-      box[1] = (box[1] < 0 ? 0 : box[1]);
+      // box[0] = (box[0] < 0 ? 0 : box[0]);
+      // box[1] = (box[1] < 0 ? 0 : box[1]);
 
       // do not overflow width
-      if(box[2] + Math.abs(box[0]) > this._originalViewbox[2]){
-        box[0] = this._originalViewbox[2] - box[2];
-      }
+      // if(box[2] + Math.abs(box[0]) > this._originalViewbox[2]){
+      //   box[0] = this._originalViewbox[2] - box[2];
+      // }
 
-      // do not overflow height
-      if(box[3] + Math.abs(box[1]) > this._originalViewbox[3]){
-        box[1] = this._originalViewbox[3] - box[3];
-      }
+      // // do not overflow height
+      // if(box[3] + Math.abs(box[1]) > this._originalViewbox[3]){
+      //   box[1] = this._originalViewbox[3] - box[3];
+      // }
       paper.setViewBox.apply(paper, box, true);
   }
 });

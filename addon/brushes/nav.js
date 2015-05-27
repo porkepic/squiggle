@@ -42,18 +42,18 @@ export default Base.extend({
       x = -e.deltaX/zoom + this._startViewBox[0];
       y = -e.deltaY/zoom + this._startViewBox[1];
 
-      x = (x < 0 ? 0 : x);
-      y = (y < 0 ? 0 : y);
+      // x = (x < 0 ? 0 : x);
+      // y = (y < 0 ? 0 : y);
 
       // do not overflow width
-      if(box[2] + Math.abs(x) > width){
-        x = width - box[2];
-      }
+      // if(box[2] + Math.abs(x) > width){
+      //   x = width - box[2];
+      // }
 
-      // do not overflow height
-      if(box[3] + Math.abs(y) > height){
-        y = height - box[3];
-      }
+      // // do not overflow height
+      // if(box[3] + Math.abs(y) > height){
+      //   y = height - box[3];
+      // }
 
       paper.setViewBox(x, y, box[2], box[3]);
     }
