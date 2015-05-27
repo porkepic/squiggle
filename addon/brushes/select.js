@@ -83,9 +83,21 @@ export default Base.extend({
     var svg = this.get("el").find("svg").get(0),
         highlight,
         intersect,
-        selection = [];
+        selection = [],
+        bbox = box.node.getBBox(),
+        rect = svg.createSVGRect(),
+        offset = this.get("el").offset(),
+        pointTop, pointBottom;
 
-    intersect = svg.getIntersectionList(box.node.getBBox(), svg);
+    // convert following the svg matrix
+    pointTop = this.convertPointInverse(bbox.x, bbox.y);
+    pointBottom = this.convertPointInverse(bbox.x + bbox.width, bbox.y + bbox.height);
+    rect.x = pointTop.x - offset.left;
+    rect.y = pointTop.y - offset.top;
+    rect.width = pointBottom.x - pointTop.x;
+    rect.height = pointBottom.y - pointTop.y;
+
+    intersect = svg.getIntersectionList(rect, svg);
 
     this.clearHighlights();
 

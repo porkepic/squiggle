@@ -10,6 +10,11 @@ export default Ember.Object.extend( {
     return this.createPoint(x,y).matrixTransform(svg.getScreenCTM().inverse());
   },
 
+  convertPointInverse: function(x, y){
+    var svg = this.get("el").find("svg")[0];
+    return this.createPoint(x,y).matrixTransform(svg.getScreenCTM());
+  },
+
   createPoint: function(x, y){
     var svg = this.get("el").find("svg")[0],
         pt = svg.createSVGPoint();
