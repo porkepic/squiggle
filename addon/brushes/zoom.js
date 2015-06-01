@@ -4,6 +4,7 @@ import Base from "./base";
 export default Base.extend({
   el: null,
   paper: null,
+  component: null,
 
   events: function(){
     var events = new Hammer(this.get("el").find("svg")[0]);
@@ -102,5 +103,7 @@ export default Base.extend({
       //   box[1] = this._originalViewbox[3] - box[3];
       // }
       paper.setViewBox.apply(paper, box, true);
+
+      this.trigger("zoom");
   }
 });

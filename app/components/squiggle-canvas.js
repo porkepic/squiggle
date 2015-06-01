@@ -151,9 +151,18 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     if(this.get("toolName") != "none"){
       var zoom = ZoomBrush.create({
         paper: this._raphael,
-        el: this.$(".squiggle-paper")
+        el: this.$(".squiggle-paper"),
+        component: this
       });
       zoom.enable();
+      zoom.on("zoom", this, "enableNav");
+    }
+  },
+
+  enableNav: function(){
+    var navTool = this.get("tools").findBy("name", "squiggle-nav");
+    if(navTool && this.get("tool") != navTool && this.get("showTools")){
+      this.enableTool(navTool);
     }
   },
 
