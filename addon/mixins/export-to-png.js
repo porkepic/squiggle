@@ -11,7 +11,7 @@ export default Ember.Mixin.create({
         that = this;
 
     outerSvg.find("textarea").remove();
-    outerSvg.find("image").remove();
+    outerSvg.find("image.base").remove();
     svg = outerSvg.find("svg");
 
     promise = new Ember.RSVP.Promise(function(resolve, reject){
