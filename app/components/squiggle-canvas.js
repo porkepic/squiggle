@@ -29,7 +29,7 @@ var defaultTools = [
 
 export default Ember.Component.extend(PngExport, SvgExport, {
   layoutName: "components/squiggle-canvas",
-  classNameBindings: [":squiggle-canvas", "toolClass"],
+  classNameBindings: [":squiggle-canvas", "toolClass", "showTools:with-tools"],
   attributeBindings: ["style"],
 
   // either provide width + height or an image
@@ -96,7 +96,6 @@ export default Ember.Component.extend(PngExport, SvgExport, {
   }.property("color", "smallSize"),
 
   didInsertElement: function(){
-
     this.imageDidChange();
   },
 
@@ -219,6 +218,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
 
   changeSize: function(){
     this._raphael.setSize(this.$().width(),this.$().height());
+    this.updateBaseSvg();
   },
 
   togglePalette: function(type, callback){
