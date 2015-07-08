@@ -99,6 +99,10 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     this.imageDidChange();
   },
 
+  willDestroyElement: function(){
+    Ember.$(window).off("resize." + this.get("elementId"));
+  },
+
   imageDidChange: function(){
     if(this.get("image")){
       this.$("img").one("load", Ember.$.proxy(this.createRaphael, this));
@@ -143,7 +147,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
 
     this.updateBaseSvg();
 
-    Ember.$(window).on("resize", function(){
+    Ember.$(window).on("resize." + this.get("elementId"), function(){
       Ember.run.debounce(that, "changeSize", 100);
     });
 
@@ -217,6 +221,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
   }.observes("tool", "color", "smallSize"),
 
   changeSize: function(){
+    debugger
     this._raphael.setSize(this.$().width(),this.$().height());
     this.updateBaseSvg();
   },

@@ -36,7 +36,8 @@ export default Base.extend({
         paper = this.get("paper"),
         shapes = this.get("shapes"),
         events = this.get("events"),
-        point;
+        point,
+        el = this.get("el");
 
     if(e.tapCount > 1){
       this.end(e);
@@ -49,7 +50,8 @@ export default Base.extend({
       this._savedPath = this._shape.attr('path');
 
       shapes.push(this._shape);
-      this._shape.attr('stroke-width',  this.get("brushWidth"));
+      var size = el.width() / el.find("svg")[0].getAttribute("viewBox").split(" ")[2];
+      this._shape.attr('stroke-width',  this.get("brushWidth") / size);
       this._shape.attr('stroke', this.get("brushColor"));
       // this._shape.node.setAttribute('vector-effect', "non-scaling-stroke");
 

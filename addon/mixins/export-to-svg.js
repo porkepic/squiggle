@@ -5,6 +5,7 @@ var container = '<g transform="scale(%s)">%h</g>';
 export default Ember.Mixin.create({
   exportToSvg: function(){
     var svg = this.$("svg").clone(),
+        width = +svg[0].getAttribute("viewBox").split(" ")[2],
         div = document.createElement("div"),
         svgContent,
         promise;
@@ -23,7 +24,7 @@ export default Ember.Mixin.create({
     svgContent = svgContent.replace("</svg>", "");
 
     promise = new Ember.RSVP.Promise(function(resolve, reject){
-      resolve(container.replace("%s", 1/(+svg.attr("width")) )
+      resolve(container.replace("%s", 1/width )
                        .replace("%h", svgContent) );
     });
 
