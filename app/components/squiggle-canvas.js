@@ -69,10 +69,6 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     return tools.findBy("isActive", true);
   }),
 
-  _register: function() {
-    this.set('register-as', this); // register-as is a new property
-  }.on('init'),
-
   style: Ember.computed("width", "height", function(){
     return ["width:" + this.get("width"),
      "height:" + this.get("height")].join(";").htmlSafe();
@@ -97,6 +93,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
 
   didInsertElement: function(){
     this.imageDidChange();
+    this.set('register-as', this);
   },
 
   willDestroyElement: function(){
@@ -170,6 +167,10 @@ export default Ember.Component.extend(PngExport, SvgExport, {
   },
 
   updateBaseSvg: Ember.observer("baseSvg", function(){
+    if(!this._raphael){
+      return;
+    }
+
     var baseSvg = this.get("baseSvg"),
         width = this._viewBoxWidth,
         g = this.$().find("#base-svg");
