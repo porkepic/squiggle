@@ -1,8 +1,8 @@
-<img {{bind-attr src="image"}}/>
+<img src={{image}} />
 <canvas></canvas>
 <div class="squiggle-paper">
 
-  <textarea {{bind-attr style="textStyle"}}></textarea>
+  <textarea style={{textStyle}}></textarea>
 </div>
 
 {{#if showTools}}
@@ -10,19 +10,19 @@
     {{#if isFirstPalette}}
       <!-- show selected color -->
       <div class="squiggle-colors">
-        <div class="squiggle-color" {{bind-attr style="color.style"}} {{action "selectColor" color}}></div>
+        <div class="squiggle-color" style={{color.style}} {{action "selectColor" color}}></div>
       </div>
 
       <!-- show selected size -->
       <div class="squiggle-sizes">
-        <div {{bind-attr class=":squiggle-size smallSize:small"}} {{action "selectSize"}}>
-          <div class="bar" {{bind-attr style="color.style"}}></div>
+        <div class="squiggle-size {{if smallSize 'small'}}" {{action "selectSize"}}>
+          <div class="bar" style={{color.style}}></div>
         </div>
       </div>
 
       <!-- show selected tool -->
       <div class="squiggle-brushes">
-        <div {{bind-attr class=":squiggle-brush tool.name"}} {{action "selectTool"}}>
+        <div class="squiggle-brush {{tool.name}}" {{action "selectTool"}}>
           {{#if tool.buttonTemplate}}
             {{partial tool.buttonTemplate}}
           {{/if}}
@@ -31,26 +31,26 @@
     {{else}}
       {{#if showColors}}
         <div class="squiggle-colors">
-          {{#each color in colors}}
-            <div {{bind-attr class=":squiggle-color color.selected:active" style="color.style"}} {{action "selectColor" color}}>
+          {{#each colors as |color|}}
+            <div class="squiggle-color {{if color.selected 'active'}}" style={{color.style}} {{action "selectColor" color}}>
             </div>
           {{/each}}
         </div>
       {{/if}}
       {{#if showSizes}}
         <div class="squiggle-sizes">
-          <div {{bind-attr class=":squiggle-size :small smallSize:active"}} {{action "selectSize" "small"}}>
-            <div class="bar" {{bind-attr style="color.style"}}></div>
+          <div class="squiggle-size small {{if smallSize active}}" {{action "selectSize" "small"}}>
+            <div class="bar" style={{color.style}}></div>
           </div>
-          <div {{bind-attr class=":squiggle-size smallSize::active" }} {{action "selectSize" "large"}}>
-            <div class="bar" {{bind-attr style="color.style"}}></div>
+          <div class="squiggle-size {{unless smallSize 'active'}}" {{action "selectSize" "large"}}>
+            <div class="bar" style={{color.style}}></div>
           </div>
         </div>
       {{/if}}
       {{#if showBrushes}}
         <div class="squiggle-brushes">
-          {{#each tool in tools}}
-            <div {{bind-attr class=":squiggle-brush tool.name tool.isActive:active"}} {{action "selectTool" tool}}>
+          {{#each tools as |tool|}}
+            <div class="squiggle-brush {{tool.name}} {{if tool.isActive 'active'}}" {{action "selectTool" tool}}>
               {{#if tool.buttonTemplate}}
                 {{partial tool.buttonTemplate}}
               {{/if}}

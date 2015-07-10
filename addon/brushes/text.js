@@ -50,8 +50,8 @@ export default Base.extend({
 
     this._area = el.find("textarea");
     this._area.css({
-      top: center.y - offset.top + $(window).scrollTop(),
-      left: center.x - offset.left + $(window).scrollLeft()
+      top: center.y - offset.top + Ember.$(window).scrollTop(),
+      left: center.x - offset.left + Ember.$(window).scrollLeft()
     });
     this._area.addClass("active");
     this._initialCenter = center;
@@ -73,8 +73,8 @@ export default Base.extend({
     // set the top/left, width/height
 
     box = {
-      top: this._initialCenter.y - offset.top + $(window).scrollTop(),
-      left: this._initialCenter.x - offset.left + $(window).scrollLeft(),
+      top: this._initialCenter.y - offset.top + Ember.$(window).scrollTop(),
+      left: this._initialCenter.x - offset.left + Ember.$(window).scrollLeft(),
       width: Math.max(200, center.x - this._initialCenter.x),
       height: Math.max(50, center.y - this._initialCenter.y)
     };
@@ -121,8 +121,6 @@ export default Base.extend({
         // remove current text
         text.textContent = null;
         text.appendChild(tspan);
-
-
 
     while (character = characters.pop()) {
       line.push(character);

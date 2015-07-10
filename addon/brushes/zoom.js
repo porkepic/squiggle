@@ -37,7 +37,9 @@ export default Base.extend({
   _animationFrame: function(){
     var zoom = this._lastZoom;
     this._lastZoom = null;
-    if(zoom) this.zoom.apply(this, zoom);
+    if(zoom) {
+      this.zoom.apply(this, zoom);
+    }
   },
 
   scrollZoom: function(e){

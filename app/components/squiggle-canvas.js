@@ -64,19 +64,19 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     tool.set("isActive", true);
   },
   toolName: "squiggle-path",
-  tool: function(){
+  tool: Ember.computed("tools.@each.isActive", function(){
     var tools = this.get("tools");
     return tools.findBy("isActive", true);
-  }.property("tools.@each.isActive"),
+  }),
 
   _register: function() {
     this.set('register-as', this); // register-as is a new property
   }.on('init'),
 
-  style: function(){
+  style: Ember.computed("width", "height", function(){
     return ["width:" + this.get("width"),
-     "height:" + this.get("height")].join(";")
-  }.property("width", "height"),
+     "height:" + this.get("height")].join(";").htmlSafe();
+  }),
 
   colors: [
     Color.create({color:"#FF4136"}),
@@ -86,14 +86,14 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     Color.create({color:"#000", selected:true})
   ],
 
-  color: function(){
+  color: Ember.computed("colors.@each.selected", function(){
     return this.get("colors").findProperty("selected", true);
-  }.property("colors.@each.selected"),
+  }),
 
-  textStyle: function(){
+  textStyle: Ember.computed( "color", "smallSize", function(){
     return ["color:", this.get("color.color"),
-    ";font-size:", this.get("smallSize") ? "14px": "24px", ";"].join("");
-  }.property("color", "smallSize"),
+    ";font-size:", this.get("smallSize") ? "14px": "24px", ";"].join("").htmlSafe();
+  }),
 
   didInsertElement: function(){
     this.imageDidChange();
@@ -103,7 +103,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     Ember.$(window).off("resize." + this.get("elementId"));
   },
 
-  imageDidChange: function(){
+  imageDidChange: Ember.observes("image", function(){
     if(this.get("image")){
       this.$("img").one("load", Ember.$.proxy(this.createRaphael, this));
       this.$("img").one("error", Ember.$.proxy(this.errorLoadingImage, this));
@@ -111,7 +111,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
       this.createRaphael();
     }
 
-  }.observes("image"),
+  }),
 
   errorLoadingImage: function(){
     var message = "There was an error loading the image.";
@@ -169,7 +169,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     }
   },
 
-  updateBaseSvg: function(){
+  updateBaseSvg: Ember.observes("baseSvg", function(){
     var baseSvg = this.get("baseSvg"),
         width = this._viewBoxWidth,
         g = this.$().find("#base-svg");
@@ -182,7 +182,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
       g.appendChild(this.parseSvg(baseSvg));
       this.$(".squiggle-paper svg")[0].appendChild(g);
     }
-  }.observes("baseSvg"),
+  }),
 
   //
   // This is needed as a simple append will not respect svg namespace.
@@ -209,7 +209,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     tool.set("isActive", true);
   },
 
-  styleDidChange: function(){
+  styleDidChange: Ember.observes("tool", "color", "smallSize", function(){
     var tool = this.get("tool");
     if(!tool){
       return;
@@ -218,10 +218,9 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     tool.set("brushWidth", this.get("smallSize") ? 4 : 8);
     tool.set("fontSize", this.get("smallSize") ? 14 : 24);
 
-  }.observes("tool", "color", "smallSize"),
+  }),
 
   changeSize: function(){
-    debugger
     this._raphael.setSize(this.$().width(),this.$().height());
     this.updateBaseSvg();
   },

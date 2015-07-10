@@ -6,7 +6,5 @@ export default Marker.extend({
     // remove all previous paths
     this.get("el").find("circle").remove();
     this._super(e);
-
   }
-
-})
+});

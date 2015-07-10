@@ -1,4 +1,3 @@
-import BaseBrush from "squiggle/brushes/base";
 import PathBrush from "squiggle/brushes/path";
 import PolygonBrush from "squiggle/brushes/polygon";
 import TextBrush from "squiggle/brushes/text";
@@ -26,9 +25,9 @@ var initialize = function(container){
 var Initializer = {
   name: 'routes-scroll',
   initialize: initialize
-}
+};
 
-export {initialize}
-export default Initializer
+export {initialize};
+export default Initializer;
 
 
