@@ -103,7 +103,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     Ember.$(window).off("resize." + this.get("elementId"));
   },
 
-  imageDidChange: Ember.observes("image", function(){
+  imageDidChange: Ember.observer("image", function(){
     if(this.get("image")){
       this.$("img").one("load", Ember.$.proxy(this.createRaphael, this));
       this.$("img").one("error", Ember.$.proxy(this.errorLoadingImage, this));
@@ -169,7 +169,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     }
   },
 
-  updateBaseSvg: Ember.observes("baseSvg", function(){
+  updateBaseSvg: Ember.observer("baseSvg", function(){
     var baseSvg = this.get("baseSvg"),
         width = this._viewBoxWidth,
         g = this.$().find("#base-svg");
@@ -209,7 +209,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     tool.set("isActive", true);
   },
 
-  styleDidChange: Ember.observes("tool", "color", "smallSize", function(){
+  styleDidChange: Ember.observer("tool", "color", "smallSize", function(){
     var tool = this.get("tool");
     if(!tool){
       return;
