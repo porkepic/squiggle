@@ -37,7 +37,7 @@ export default Base.extend({
     el.find(".selector").remove();
 
     box = paper.rect(point.x, point.y, 5, 5);
-    Em.$(box.node).attr("class", "selector");
+    Ember.$(box.node).attr("class", "selector");
 
     this._start = point;
     this._box = box;
@@ -101,13 +101,13 @@ export default Base.extend({
 
     this.clearHighlights();
 
-    Em.$(intersect).each(function(){
-      var sel = Em.$(this);
-      if (sel.attr("class") == "base" || this.tagName == "rect"){
+    Ember.$(intersect).each(function(){
+      var sel = Ember.$(this);
+      if (sel.attr("class") === "base" || this.tagName === "rect"){
         return;
       }
       selection.push(sel);
-      highlight = sel.clone()
+      highlight = sel.clone();
       highlight.attr("class", "highlight");
       highlight.insertBefore(this);
 

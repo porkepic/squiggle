@@ -13,8 +13,8 @@ export default Select.extend({
       }
 
       if(confirm(message)){
-        Em.$(intersect).each(function(){
-          Em.$(this).remove();
+        Ember.$(intersect).each(function(){
+          Ember.$(this).remove();
         });
       }
     }

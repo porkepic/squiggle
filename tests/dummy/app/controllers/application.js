@@ -7,7 +7,7 @@ export default Ember.ObjectController.extend({
 
   delayImageLoad: function(){
     // test image reloading
-    Em.run.later(this, function(){
+    Ember.run.later(this, function(){
       this.set("image", "grid.svg");
     }, 0);
   }.on("init"),
