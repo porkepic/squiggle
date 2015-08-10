@@ -140,6 +140,8 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     this._raphael.setViewBox(0,0, width, height);
     this._viewBoxWidth = width;
 
+    this.$(".squiggle-paper svg").prepend("<desc class='width'>" + width + "</desc>");
+
     if(this.get("image")){
       var image = this._raphael.image(this.get("image"), 0,0, width, height);
       image.node.setAttribute("class", "base");
@@ -221,7 +223,6 @@ export default Ember.Component.extend(PngExport, SvgExport, {
   }.observes("tool", "color", "smallSize"),
 
   changeSize: function(){
-    debugger
     this._raphael.setSize(this.$().width(),this.$().height());
     this.updateBaseSvg();
   },

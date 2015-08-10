@@ -5,7 +5,7 @@ var container = '<g transform="scale(%s)">%h</g>';
 export default Ember.Mixin.create({
   exportToSvg: function(){
     var svg = this.$("svg").clone(),
-        width = +svg[0].getAttribute("viewBox").split(" ")[2],
+        width = +svg.find("desc.width")[0].innerHTML,
         div = document.createElement("div"),
         svgContent,
         promise;
