@@ -83,7 +83,7 @@ export default Ember.Component.extend(PngExport, SvgExport, {
   ],
 
   color: Ember.computed("colors.@each.selected", function(){
-    return this.get("colors").findProperty("selected", true);
+    return this.get("colors").findBy("selected", true);
   }),
 
   textStyle: Ember.computed( "color", "smallSize", function(){
@@ -92,8 +92,11 @@ export default Ember.Component.extend(PngExport, SvgExport, {
   }),
 
   didInsertElement: function(){
-    this.imageDidChange();
     this.set('register-as', this);
+    Ember.run.later(this, function(){
+      this.imageDidChange();
+    });
+
   },
 
   willDestroyElement: function(){
