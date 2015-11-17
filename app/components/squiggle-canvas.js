@@ -92,11 +92,14 @@ export default Ember.Component.extend(PngExport, SvgExport, {
   }),
 
   didInsertElement: function(){
-    this.set('register-as', this);
-    Ember.run.later(this, function(){
-      this.imageDidChange();
-    });
-
+    if(this.get("image")){
+      this.$("img").one("load", Ember.$.proxy(this.createRaphael, this));
+      this.$("img").one("error", Ember.$.proxy(this.errorLoadingImage, this));
+    } else {
+      Ember.run.later(this, function(){
+        this.imageDidChange();
+      });
+    }
   },
 
   willDestroyElement: function(){
@@ -128,6 +131,8 @@ export default Ember.Component.extend(PngExport, SvgExport, {
         width = this.$().width(),
         height = this.$().height();
     this.$(".squiggle-paper svg").remove();
+
+    this.set('register-as', this);
 
     this._raphael = Raphael(this.$(".squiggle-paper")[0], width, height);
     this._shapes = [];
