@@ -157,7 +157,8 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     Ember.$(window).on("resize." + this.get("elementId"), function(){
       Ember.run.debounce(that, "changeSize", 100);
     });
-
+    this.changeSize();
+    
     if(this.get("toolName") != "none"){
       var zoom = ZoomBrush.create({
         paper: this._raphael,
