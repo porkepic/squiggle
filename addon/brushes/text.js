@@ -34,8 +34,8 @@ export default Base.extend({
     this._area.css( this.checkEdges({
       top: +this._area.css("top").replace("px", ""),
       left: +this._area.css("left").replace("px", ""),
-      width: 200,
-      height: 50
+      width: 200
+      // height: 50
     }));
     this.end();
   },
@@ -48,7 +48,7 @@ export default Base.extend({
         starty = center.y,
         offset = this.get("el").offset();
 
-    this._area = el.find("textarea");
+    this._area = el.find(".textarea");
     this._area.css({
       top: center.y - offset.top + Ember.$(window).scrollTop(),
       left: center.x - offset.left + Ember.$(window).scrollLeft()
@@ -76,15 +76,16 @@ export default Base.extend({
       top: this._initialCenter.y - offset.top + Ember.$(window).scrollTop(),
       left: this._initialCenter.x - offset.left + Ember.$(window).scrollLeft(),
       width: Math.max(200, center.x - this._initialCenter.x),
-      height: Math.max(50, center.y - this._initialCenter.y)
+      minHeight: Math.max(50, center.y - this._initialCenter.y)
     };
 
     this._area.css( this.checkEdges(box) );
+    // this._area.on("update", Ember.$.proxy(this.resizeTextArea, this));
   },
 
   end: function(e){
     this._area.focus();
-    this._area.one("blur", Ember.$.proxy(this.convertToSVG, this));
+    this._area.on("blur", Ember.$.proxy(this.convertToSVG, this));
   },
 
   checkEdges: function(box){
@@ -141,7 +142,7 @@ export default Base.extend({
   },
 
   convertToSVG: function(){
-    var value = this._area.val(),
+    var value = this._area.text(),
         svg = this.get("el").find("svg")[0],
         text;
     if(value && value.length > 0){
@@ -159,7 +160,7 @@ export default Base.extend({
       text.setAttribute("stroke", this.get("brushColor"));
       text.setAttribute("stroke-width", "0px");
       text.setAttribute("font-family", "sans-serif");
-      text.setAttribute("font-size", this.get("fontSize") + "px");
+      text.setAttribute("font-size", (this.currentImgRatio() * this.get("fontSize")) + "px");
       svg.appendChild(text);
 
       // find out width
@@ -168,11 +169,10 @@ export default Base.extend({
     }
 
     // remove the value for next use.
-    this._area.val("");
+    this._area.text("");
     this._area.removeClass("active");
     this._area.css({
-      width: 0,
-      height: 0
+      width: 0
     });
   }
 });

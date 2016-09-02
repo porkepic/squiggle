@@ -31,9 +31,9 @@ export default Base.extend({
         starty = center.y,
         paper = this.get("paper"),
         point = this.convertPoint(startx, starty),
-        circle = paper.circle(point.x, point.y, 10);
+        circle = paper.circle(point.x, point.y, 10 * this.currentImgRatio());
 
-    circle.attr('stroke-width',  this.get("brushWidth"));
+    circle.attr('stroke-width',  this.get("brushWidth") * this.currentImgRatio());
     circle.attr('stroke', this.get("brushColor"));
     // circle.node.setAttribute('vector-effect', "non-scaling-stroke");
   }

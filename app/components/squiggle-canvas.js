@@ -86,9 +86,16 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     return this.get("colors").findBy("selected", true);
   }),
 
-  textStyle: Ember.computed( "color", "smallSize", function(){
+  textStyle: Ember.computed( "tool", "color", "smallSize", function(){
+    var tool = this.get("tool");
+    if(!tool){
+      return "";
+    }
+    var ratio = tool.currentImgRatioConverted(),
+        fontSize = this.get("smallSize") ? 14: 24;
+
     return ["color:", this.get("color.color"),
-    ";font-size:", this.get("smallSize") ? "14px": "24px", ";"].join("").htmlSafe();
+    ";font-size:", (ratio * fontSize) + "px", ";"].join("").htmlSafe();
   }),
 
   didInsertElement: function(){
@@ -148,11 +155,10 @@ export default Ember.Component.extend(PngExport, SvgExport, {
     this.$(".squiggle-paper svg").prepend("<desc class='width'>" + width + "</desc>");
 
     if(this.get("image")){
-      var image = this._raphael.image(this.get("image"), 0,0, width, height);
-      image.node.setAttribute("class", "base");
+      this._image = this._raphael.image(this.get("image"), 0,0, width, height);
+      this._image.node.setAttribute("class", "base");
     }
-
-    this.updateBaseSvg();
+    // this.updateBaseSvg();
 
     Ember.$(window).on("resize." + this.get("elementId"), function(){
       Ember.run.debounce(that, "changeSize", 100);
@@ -233,8 +239,13 @@ export default Ember.Component.extend(PngExport, SvgExport, {
   }),
 
   changeSize: function(){
-    this._raphael.setSize(this.$().width(),this.$().height());
+    var width = this.$().width(),
+        height = this.$().height();
+    this._raphael.setSize(width, height);
     this.updateBaseSvg();
+    Ember.run.later(this, function(){
+      this.notifyPropertyChange("textStyle");  
+    });
   },
 
   togglePalette: function(type, callback){

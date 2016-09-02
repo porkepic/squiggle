@@ -19,12 +19,13 @@
     width: 100%;
     visibility: hidden;
   }
-  textarea{
+  .textarea{
     position: absolute;
     top: 0;
     left: 0;
     width: 0;
-    height: 0;
+    // height: 0;
+    font-family: sans-serif;
     background: transparent;
     border: none;
     -webkit-appearance: none;

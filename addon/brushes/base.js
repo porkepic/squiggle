@@ -28,5 +28,14 @@ export default Ember.Object.extend( Ember.Evented, {
     return svg[0].getAttribute("viewBox").split(" ").map(function(v){
       return +v;
     });
+  },
+
+  currentImgRatio: function(){
+    return this.currentViewBox()[2] / this.get("el").parent().find("img")[0].naturalWidth;
+  },
+
+  currentImgRatioConverted: function(){
+    var el = this.get("el");
+    return el.find("svg").width() / el.parent().find("img")[0].naturalWidth;
   }
 });
