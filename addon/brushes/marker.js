@@ -31,10 +31,10 @@ export default Base.extend({
         starty = center.y,
         paper = this.get("paper"),
         point = this.convertPoint(startx, starty),
-        circle = paper.circle(point.x, point.y, 10 * this.currentImgRatio());
+        circle = paper.circle(point.x, point.y, this.get("brushWidth") * this.currentImgRatio());
 
-    circle.attr('stroke-width',  this.get("brushWidth") * this.currentImgRatio());
-    circle.attr('stroke', this.get("brushColor"));
+    // circle.attr('stroke-width', this.get("brushWidth") * this.currentImgRatio());
+    circle.attr('fill', this.get("brushColor"));
     // circle.node.setAttribute('vector-effect', "non-scaling-stroke");
   }
 });
