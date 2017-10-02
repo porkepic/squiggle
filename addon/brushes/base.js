@@ -3,8 +3,8 @@ import frame from "./animation_frame";
 
 export default Ember.Object.extend( Ember.Evented, {
   name: "none",
-  enable: Ember.K,
-  disable: Ember.K,
+  enable: function(){},
+  disable: function(){},
   convertPoint: function(x, y){
     var svg = this.get("el").find("svg")[0];
     return this.createPoint(x,y).matrixTransform(svg.getScreenCTM().inverse());

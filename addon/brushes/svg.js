@@ -4,7 +4,7 @@ import Select from "./select";
 export default Select.extend({
   name: "squiggle-svg",
   buttonTemplate: "components/svg-brush",
-  highlight: Ember.K,
+  highlight: function(){},
   image: "ouverture-pontage.svg",
   end: function(e){
     var paper = this.get("paper"),
