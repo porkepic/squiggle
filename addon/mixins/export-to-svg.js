@@ -15,6 +15,7 @@ export default Ember.Mixin.create({
     svg.find("image.base").remove();
     svg.find("defs").remove();
     svg.find("desc").remove();
+    svg.find("#base-svg").remove();
 
     div.appendChild(svg[0]);
 
